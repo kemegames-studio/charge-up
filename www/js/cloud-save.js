@@ -13,6 +13,7 @@ var _db = null;
 var _uid = null;
 var _saveTimeout = null;
 var _cloudReady = false;
+var _loaded = false;   // guard: block saves until initial load completes
 
 /* ── Init ── */
 function initCloudSave() {
@@ -60,7 +61,7 @@ function _collectState() {
 
 /* ── Apply loaded state to game ── */
 function _applyState(data) {
-  if (!data) return;
+  if (!data) { _loaded = true; return; }
 
   /* completed levels */
   completedLevels = new Set(data.completedLevels || []);
@@ -90,11 +91,13 @@ function _applyState(data) {
   if (typeof buildLevelMap      === "function") buildLevelMap(false);
   if (typeof updateTogglesUI    === "function") updateTogglesUI();
 
+  _loaded = true;
   _showSaveToast("☁️ Progress loaded");
 }
 
 /* ── Save (debounced 2s) ── */
 function saveProgress() {
+  if (!_loaded) return;   // don't overwrite save data before load completes
   _saveLocal();
   if (!_cloudReady) return;
   clearTimeout(_saveTimeout);
@@ -143,7 +146,8 @@ function loadProgressLocal() {
   try {
     var raw = localStorage.getItem("cu_save");
     if (raw) _applyState(JSON.parse(raw));
-  } catch(e) {}
+    else _loaded = true;  // no saved data — allow saves from now on
+  } catch(e) { _loaded = true; }
 }
 
 /* ── Toast notification ── */
