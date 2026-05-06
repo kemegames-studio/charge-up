@@ -240,6 +240,7 @@ function saveProfile() {
   document.getElementById("avatarDisplay").textContent = profile.avatar;
   document.getElementById("avatarName").textContent    = profile.name;
   closeAvatarModal();
+  if (typeof saveProgress === "function") saveProgress();
 }
 
 function navHome()  { /* already on home */ }

@@ -55,6 +55,8 @@ function _collectState() {
     soundBgm:        soundSettings   ? soundSettings.bgm    : true,
     soundVol:        soundSettings   ? soundSettings.volume : 0.08,
     lang:            currentLang     || "en",
+    profileName:     (typeof profile !== "undefined") ? profile.name   : "Player",
+    profileAvatar:   (typeof profile !== "undefined") ? profile.avatar : "😎",
     savedAt:         Date.now()
   };
 }
@@ -83,6 +85,16 @@ function _applyState(data) {
 
   /* language */
   if (data.lang) { currentLang = data.lang; }
+
+  /* profile */
+  if (typeof profile !== "undefined") {
+    if (data.profileName)   profile.name   = data.profileName;
+    if (data.profileAvatar) profile.avatar = data.profileAvatar;
+    var nameEl   = document.getElementById("avatarName");
+    var dispEl   = document.getElementById("avatarDisplay");
+    if (nameEl)  nameEl.textContent  = profile.name;
+    if (dispEl)  dispEl.textContent  = profile.avatar;
+  }
 
   /* refresh all UI */
   if (typeof updateXpDisplay    === "function") updateXpDisplay();
