@@ -101,7 +101,8 @@ function onMove(e) {
       won=true; clearInterval(battTimer); clearInterval(phoneTimer);
       var wasNew=!completedLevels.has(levelIdx); completedLevels.add(levelIdx);
       if (wasNew&&levelIdx+1<LEVELS.length) { selectedLevel=levelIdx+1; pendingUnlock=levelIdx+1; }
-      draw(); playWinSfx(); setTimeout(function(){ showWinOverlay(battery); },500);
+      var reward=(typeof awardLevel==="function")?awardLevel(levelIdx,wasNew):{xp:0,thndr:0};
+      draw(); playWinSfx(); setTimeout(function(){ showWinOverlay(battery,reward); },500);
     } else { setMsg(getLang().msgDone(done,total)); }
     draw(); return;
   }

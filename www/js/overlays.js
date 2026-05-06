@@ -71,9 +71,13 @@ function setLang(lang) {
 /* ════════ WIN OVERLAY ════════ */
 /* ════════ WIN OVERLAY ════════ */
 var confettiParticles=[], confettiAnim=null;
-function showWinOverlay(battPct) {
+function showWinOverlay(battPct, reward) {
   var L=getLang();
   document.getElementById("winBattery").textContent=battPct+"%";
+  var xpBanner=document.getElementById("winXpReward");
+  var thndrBanner=document.getElementById("winThndrReward");
+  if (xpBanner && reward) xpBanner.textContent="+"+(reward.xp||0)+" XP";
+  if (thndrBanner && reward) thndrBanner.textContent="+"+(reward.thndr||0)+" ⚡";
   var wt2=document.querySelector(".win-title"); if(wt2) wt2.textContent=L.winTitle||"CHARGED!";
   document.querySelector(".win-subtitle").textContent=L.winSub;
   document.querySelector(".win-bat-label").textContent=L.batteryLeft;
