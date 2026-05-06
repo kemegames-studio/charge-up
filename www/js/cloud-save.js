@@ -135,7 +135,6 @@ function _saveCloud() {
 function _syncLeaderboard(state) {
   if (!_cloudReady || !_db || !_uid) return;
   var s = state || _collectState();
-  /* Build a proper nested object — dotted string keys in set() are literal, not paths */
   var entry = {
     name:        s.profileName   || "Player",
     avatar:      s.profileAvatar || "😎",
@@ -144,11 +143,16 @@ function _syncLeaderboard(state) {
     playerLevel: s.playerLevel   || 1,
     updatedAt:   Date.now()
   };
-  var nested = { players: {} };
-  nested.players[_uid] = entry;
-  _db.collection("meta").doc("leaderboard")
-    .set(nested, { merge: true })
-    .catch(function(err) { console.warn("Leaderboard sync failed:", err.message); });
+  /* update() with dot-notation only touches THIS player's key — other players' entries survive */
+  var patch = {};
+  patch["players." + _uid] = entry;
+  var ref = _db.collection("meta").doc("leaderboard");
+  ref.update(patch).catch(function(err) {
+    /* Document doesn't exist yet — create it then retry */
+    var seed = { players: {} };
+    seed.players[_uid] = entry;
+    ref.set(seed).catch(function(e) { console.warn("Leaderboard sync failed:", e.message); });
+  });
 }
 
 function fetchLeaderboard(callback) {
