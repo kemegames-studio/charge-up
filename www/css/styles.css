@@ -928,6 +928,48 @@ canvas {
 
 
 /* ═══════════════════════════════════════
+   LEADERBOARD OVERLAY
+═══════════════════════════════════════ */
+
+/* Scrollbar styling for rank list */
+#lbList::-webkit-scrollbar { width: 3px; }
+#lbList::-webkit-scrollbar-track { background: transparent; }
+#lbList::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 3px; }
+
+/* Podium blocks hover */
+#lbPodium > div:active { opacity: 0.85; transform: scale(0.97); }
+
+/* Row hover */
+#lbList > div:active { background: rgba(0,255,136,.04) !important; }
+
+/* Subtle scan-line on the card header */
+#leaderboardCard > div:first-child::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,136,.015) 4px);
+  pointer-events: none; border-radius: inherit;
+}
+
+/* Glow pulse on the trophy icon in nav */
+.h-nav-btn:has(span[style*="127942"]) .h-nav-icon,
+.h-nav-btn .h-nav-icon { display: block; }
+
+@keyframes lbPodiumIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#lbPodium > div { animation: lbPodiumIn .4s ease both; }
+#lbPodium > div:nth-child(1) { animation-delay: .05s; }
+#lbPodium > div:nth-child(2) { animation-delay: .1s; }
+#lbPodium > div:nth-child(3) { animation-delay: .15s; }
+
+@keyframes lbRowIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+
+/* ═══════════════════════════════════════
    SPLASH SCREENS
 ═══════════════════════════════════════ */
 .splash {

@@ -417,6 +417,31 @@
   </div>
 </div>
 
+<!-- LEADERBOARD OVERLAY -->
+<div id="leaderboardOverlay" style="position:fixed;inset:0;z-index:250;background:rgba(0,0,0,0.94);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .25s;" onclick="if(event.target===this)closeLeaderboard()">
+  <div id="leaderboardCard" style="width:100%;max-width:480px;height:90vh;background:linear-gradient(180deg,#060f14 0%,#040a0d 100%);border-top:1.5px solid #1e4060;border-radius:24px 24px 0 0;display:flex;flex-direction:column;transform:translateY(60px);transition:transform .35s cubic-bezier(.36,1.56,.64,1);overflow:hidden;">
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 18px 12px;border-bottom:1px solid #0d1e28;flex-shrink:0;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:22px;">&#127942;</span>
+        <div>
+          <div style="font-family:Orbitron,sans-serif;font-size:16px;font-weight:900;color:#fff;letter-spacing:1px;">LEADERBOARD</div>
+          <div style="font-size:10px;color:#2a4838;letter-spacing:2px;font-family:Orbitron,sans-serif;">TOP PLAYERS</div>
+        </div>
+      </div>
+      <button onclick="closeLeaderboard()" style="background:transparent;border:1px solid #1a2d3a;color:#6a9080;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
+    </div>
+
+    <!-- Podium -->
+    <div id="lbPodium" style="padding:20px 16px 8px;border-bottom:1px solid #0d1e28;flex-shrink:0;display:flex;align-items:flex-end;justify-content:center;gap:10px;min-height:130px;"></div>
+
+    <!-- Scrollable rank list -->
+    <div id="lbList" style="flex:1;overflow-y:auto;overscroll-behavior:contain;"></div>
+
+  </div>
+</div>
+
 <script src="js/data.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/levels.js"></script>
@@ -426,6 +451,7 @@
 <script src="js/store.js"></script>
 <script src="js/overlays.js"></script>
 <script src="js/cloud-save.js"></script>
+<script src="js/leaderboard.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>

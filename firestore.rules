@@ -4,5 +4,9 @@ service cloud.firestore {
     match /players/{playerId} {
       allow read, write: if request.auth != null && request.auth.uid == playerId;
     }
+    match /leaderboard/{playerId} {
+      allow read:  if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == playerId;
+    }
   }
 }
