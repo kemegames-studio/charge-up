@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Charge Up</string>
+    <string name="title_activity_main">Charge Up</string>
+    <string name="package_name">com.kemegames.chargeup</string>
+    <string name="custom_url_scheme">com.kemegames.chargeup</string>
+</resources>
