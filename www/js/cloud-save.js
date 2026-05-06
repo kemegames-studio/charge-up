@@ -148,21 +148,41 @@ function _syncLeaderboard(state) {
 }
 
 function fetchLeaderboard(callback) {
-  if (!_cloudReady || !_db) { callback([], null); return; }
+  /* Build a guaranteed self-entry from current session state */
+  function _selfEntry() {
+    var s = _collectState();
+    return { uid: _uid || "me", name: s.profileName || "Player", avatar: s.profileAvatar || "😎",
+             xp: s.xp || 0, thndr: s.thndr || 0, playerLevel: s.playerLevel || 1 };
+  }
+
+  if (!_cloudReady || !_db) {
+    var rows = xp > 0 ? [_selfEntry()] : [];
+    callback(rows, _uid);
+    return;
+  }
+
   _db.collection("leaderboard")
-    .orderBy("xp", "desc")
-    .limit(50)
+    .limit(100)
     .get()
     .then(function(snap) {
       var rows = [];
+      var myInList = false;
       snap.forEach(function(doc) {
-        rows.push(Object.assign({ uid: doc.id }, doc.data()));
+        var row = Object.assign({ uid: doc.id }, doc.data());
+        rows.push(row);
+        if (doc.id === _uid) myInList = true;
       });
+      /* If current player not in list yet, inject from local state */
+      if (!myInList && (xp > 0 || rows.length === 0)) {
+        rows.push(_selfEntry());
+      }
+      /* Sort by XP descending client-side */
+      rows.sort(function(a, b) { return (b.xp || 0) - (a.xp || 0); });
       callback(rows, _uid);
     })
     .catch(function(err) {
       console.warn("Leaderboard fetch failed:", err.message);
-      callback([], _uid);
+      callback([_selfEntry()], _uid);
     });
 }
 
@@ -173,8 +193,15 @@ function loadProgress() {
     _db.collection("players").doc(_uid).get()
       .then(function(doc) {
         if (doc.exists) {
-          _applyState(doc.data());
-          _syncLeaderboard();   // backfill leaderboard entry for existing players
+          var d = doc.data();
+          _applyState(d);
+          _syncLeaderboard({    // pass data directly — no timing ambiguity
+            profileName:   d.profileName   || "Player",
+            profileAvatar: d.profileAvatar || "😎",
+            xp:            d.xp            || 0,
+            thndr:         d.thndr         || 0,
+            playerLevel:   d.playerLevel   || 1
+          });
         } else {
           /* no cloud data — check local */
           loadProgressLocal();

@@ -4,6 +4,10 @@ function openLeaderboard() {
   var ov = document.getElementById("leaderboardOverlay");
   ov.style.opacity = "1"; ov.style.pointerEvents = "all";
   document.getElementById("leaderboardCard").style.transform = "translateY(0)";
+  refreshLeaderboard();
+}
+
+function refreshLeaderboard() {
   renderLeaderboardLoading();
   fetchLeaderboard(function(rows, myUid) {
     renderLeaderboard(rows, myUid);

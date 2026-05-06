@@ -430,7 +430,10 @@
           <div style="font-size:10px;color:#2a4838;letter-spacing:2px;font-family:Orbitron,sans-serif;">TOP PLAYERS</div>
         </div>
       </div>
-      <button onclick="closeLeaderboard()" style="background:transparent;border:1px solid #1a2d3a;color:#6a9080;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
+      <div style="display:flex;gap:8px;">
+        <button onclick="refreshLeaderboard()" style="background:transparent;border:1px solid #1a2d3a;color:#00ff88;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Refresh">&#x21BA;</button>
+        <button onclick="closeLeaderboard()" style="background:transparent;border:1px solid #1a2d3a;color:#6a9080;width:34px;height:34px;border-radius:10px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&#x2715;</button>
+      </div>
     </div>
 
     <!-- Podium -->
