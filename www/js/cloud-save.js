@@ -148,7 +148,6 @@ function _syncLeaderboard(state) {
 }
 
 function fetchLeaderboard(callback) {
-  /* Build a guaranteed self-entry from current session state */
   function _selfEntry() {
     var s = _collectState();
     return { uid: _uid || "me", name: s.profileName || "Player", avatar: s.profileAvatar || "😎",
@@ -156,27 +155,30 @@ function fetchLeaderboard(callback) {
   }
 
   if (!_cloudReady || !_db) {
-    var rows = xp > 0 ? [_selfEntry()] : [];
-    callback(rows, _uid);
+    callback([_selfEntry()], _uid);
     return;
   }
 
-  _db.collection("leaderboard")
+  /* Query players collection directly — everyone's data is already there */
+  _db.collection("players")
     .limit(100)
     .get()
     .then(function(snap) {
       var rows = [];
       var myInList = false;
       snap.forEach(function(doc) {
-        var row = Object.assign({ uid: doc.id }, doc.data());
-        rows.push(row);
+        var d = doc.data();
+        rows.push({
+          uid:         doc.id,
+          name:        d.profileName   || "Player",
+          avatar:      d.profileAvatar || "😎",
+          xp:          d.xp            || 0,
+          thndr:       d.thndr         || 0,
+          playerLevel: d.playerLevel   || 1
+        });
         if (doc.id === _uid) myInList = true;
       });
-      /* If current player not in list yet, inject from local state */
-      if (!myInList && (xp > 0 || rows.length === 0)) {
-        rows.push(_selfEntry());
-      }
-      /* Sort by XP descending client-side */
+      if (!myInList) rows.push(_selfEntry());
       rows.sort(function(a, b) { return (b.xp || 0) - (a.xp || 0); });
       callback(rows, _uid);
     })
