@@ -220,7 +220,7 @@
 
 <!-- STORE MODAL -->
 <div id="storeOverlay" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);display:flex;align-items:flex-start;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;overflow-y:auto;">
-  <div id="storeCard" style="background:linear-gradient(160deg,#1a1e00,#111400);border:2px solid #8aaa00;border-radius:24px;padding:24px 20px 28px;width:92%;max-width:380px;margin:20px auto;transform:scale(0.88);transition:transform .3s cubic-bezier(.36,1.56,.64,1);">
+  <div id="storeCard" style="background:linear-gradient(160deg,#040c10,#080f14);border:1.5px solid #1e4060;border-radius:20px;padding:24px 18px 28px;width:92%;max-width:380px;margin:20px auto;transform:scale(0.88);transition:transform .3s cubic-bezier(.36,1.56,.64,1);box-shadow:0 0 50px rgba(0,170,255,.08);">
     
     <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
@@ -330,72 +330,72 @@
   </div>
 </div>
 
-<div id="settingsOverlay" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;">
-  <div id="settingsCard" style="background:linear-gradient(160deg,#0d2a14,#111);border:2px solid #2ecc71;border-radius:24px;padding:28px 28px 24px;width:88%;max-width:320px;transform:scale(0.85);transition:transform .3s cubic-bezier(.36,1.56,.64,1);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-      <div style="font-family:Orbitron,sans-serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:1px;">SETTINGS</div>
-      <button onclick="closeSettings()" style="background:transparent;border:1px solid #333;color:#888;width:32px;height:32px;border-radius:8px;font-size:16px;cursor:pointer;">&#x2715;</button>
+<div id="settingsOverlay" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;">
+  <div id="settingsCard" style="background:linear-gradient(160deg,#002a14,#050f0a);border:1.5px solid #00cc6a;border-radius:20px;padding:28px 24px 24px;width:88%;max-width:320px;transform:scale(0.85);transition:transform .3s cubic-bezier(.36,1.56,.64,1);box-shadow:0 0 50px rgba(0,255,136,.12);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div style="font-family:Orbitron,sans-serif;font-size:16px;font-weight:900;color:#00ff88;letter-spacing:2px;">SETTINGS</div>
+      <button onclick="closeSettings()" style="background:#0f1820;border:1px solid #1e4060;color:#6a9080;width:32px;height:32px;border-radius:8px;font-size:16px;cursor:pointer;">&#x2715;</button>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div><div id="sfxLabel" style="font-size:14px;font-weight:700;color:#fff;">Sound Effects</div><div id="sfxSub" style="font-size:11px;color:#555;margin-top:2px;">Win &amp; unlock sounds</div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div><div id="sfxLabel" style="font-size:13px;font-weight:700;color:#d8eee0;">Sound Effects</div><div id="sfxSub" style="font-size:10px;color:#2a4838;margin-top:2px;">Win &amp; unlock sounds</div></div>
       <div class="toggle-wrap" id="sfxToggle" onclick="toggleSfx()"><div class="toggle-knob"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div><div id="bgmLabel" style="font-size:14px;font-weight:700;color:#fff;">Music</div><div id="bgmSub" style="font-size:11px;color:#555;margin-top:2px;">Background music</div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div><div id="bgmLabel" style="font-size:13px;font-weight:700;color:#d8eee0;">Music</div><div id="bgmSub" style="font-size:10px;color:#2a4838;margin-top:2px;">Background music</div></div>
       <div class="toggle-wrap" id="bgmToggle" onclick="toggleBgm()"><div class="toggle-knob"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div style="flex:1;margin-left:12px;margin-right:12px;">
-        <div id="volLabel" style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div style="flex:1;">
+        <div id="volLabel" style="font-size:13px;font-weight:700;color:#d8eee0;margin-bottom:8px;"></div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-size:14px;">&#x1F508;</span>
-          <input type="range" id="volSlider" min="0" max="100" value="8" oninput="onVolumeChange(this.value)" style="flex:1;accent-color:#2ecc71;height:4px;">
-          <span style="font-size:14px;">&#x1F50A;</span>
+          <span style="font-size:13px;">&#x1F508;</span>
+          <input type="range" id="volSlider" min="0" max="100" value="8" oninput="onVolumeChange(this.value)" style="flex:1;accent-color:#00ff88;height:4px;">
+          <span style="font-size:13px;">&#x1F50A;</span>
         </div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div><div id="langLabel" style="font-size:14px;font-weight:700;color:#fff;">Language</div><div id="langSub" style="font-size:11px;color:#555;margin-top:2px;">App language</div></div>
-      <div style="display:flex;border:1px solid #333;border-radius:10px;overflow:hidden;">
-        <button id="langEnBtn" onclick="setLang('en')" style="padding:7px 14px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#1a1a1a;color:#666;">EN</button>
-        <button id="langArBtn" onclick="setLang('ar')" style="padding:7px 14px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#2ecc71;color:#fff;">&#x639;&#x631;&#x628;&#x64A;</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div><div id="langLabel" style="font-size:13px;font-weight:700;color:#d8eee0;">Language</div><div id="langSub" style="font-size:10px;color:#2a4838;margin-top:2px;">App language</div></div>
+      <div style="display:flex;border:1px solid #1e4060;border-radius:10px;overflow:hidden;">
+        <button id="langEnBtn" onclick="setLang('en')" style="padding:6px 13px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#0f1820;color:#6a9080;">EN</button>
+        <button id="langArBtn" onclick="setLang('ar')" style="padding:6px 13px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#00ff88;color:#000;">&#x639;&#x631;&#x628;&#x64A;</button>
       </div>
     </div>
-    <div style="margin-top:20px;text-align:center;font-size:11px;color:#252525;">Prototype by Keme Games &middot; 2026</div>
+    <div style="margin-top:18px;text-align:center;font-size:10px;color:#2a4838;">Prototype by Keme Games &middot; 2026</div>
   </div>
 </div>
-<div id="settingsOverlay" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;">
-  <div id="settingsCard" style="background:linear-gradient(160deg,#0d2a14,#111);border:2px solid #2ecc71;border-radius:24px;padding:28px 28px 24px;width:88%;max-width:320px;transform:scale(0.85);transition:transform .3s cubic-bezier(.36,1.56,.64,1);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-      <div style="font-family:Orbitron,sans-serif;font-size:18px;font-weight:900;color:#fff;letter-spacing:1px;">SETTINGS</div>
-      <button onclick="closeSettings()" style="background:transparent;border:1px solid #333;color:#888;width:32px;height:32px;border-radius:8px;font-size:16px;cursor:pointer;">&#x2715;</button>
+<div id="settingsOverlay" style="position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.92);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;">
+  <div id="settingsCard" style="background:linear-gradient(160deg,#002a14,#050f0a);border:1.5px solid #00cc6a;border-radius:20px;padding:28px 24px 24px;width:88%;max-width:320px;transform:scale(0.85);transition:transform .3s cubic-bezier(.36,1.56,.64,1);box-shadow:0 0 50px rgba(0,255,136,.12);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;">
+      <div style="font-family:Orbitron,sans-serif;font-size:16px;font-weight:900;color:#00ff88;letter-spacing:2px;">SETTINGS</div>
+      <button onclick="closeSettings()" style="background:#0f1820;border:1px solid #1e4060;color:#6a9080;width:32px;height:32px;border-radius:8px;font-size:16px;cursor:pointer;">&#x2715;</button>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div><div id="sfxLabel" style="font-size:14px;font-weight:700;color:#fff;"></div><div id="sfxSub" style="font-size:11px;color:#555;margin-top:2px;"></div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div><div id="sfxLabel" style="font-size:13px;font-weight:700;color:#d8eee0;"></div><div id="sfxSub" style="font-size:10px;color:#2a4838;margin-top:2px;"></div></div>
       <div class="toggle-wrap on" id="sfxToggle" onclick="toggleSfx()"><div class="toggle-knob"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div><div id="bgmLabel" style="font-size:14px;font-weight:700;color:#fff;"></div><div id="bgmSub" style="font-size:11px;color:#555;margin-top:2px;"></div></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div><div id="bgmLabel" style="font-size:13px;font-weight:700;color:#d8eee0;"></div><div id="bgmSub" style="font-size:10px;color:#2a4838;margin-top:2px;"></div></div>
       <div class="toggle-wrap on" id="bgmToggle" onclick="toggleBgm()"><div class="toggle-knob"></div></div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div style="flex:1;margin-left:12px;margin-right:12px;">
-        <div id="volLabel" style="font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div style="flex:1;">
+        <div id="volLabel" style="font-size:13px;font-weight:700;color:#d8eee0;margin-bottom:8px;"></div>
         <div style="display:flex;align-items:center;gap:10px;">
-          <span style="font-size:14px;">&#x1F508;</span>
-          <input type="range" id="volSlider" min="0" max="100" value="8" oninput="onVolumeChange(this.value)" style="flex:1;accent-color:#2ecc71;height:4px;">
-          <span style="font-size:14px;">&#x1F50A;</span>
+          <span style="font-size:13px;">&#x1F508;</span>
+          <input type="range" id="volSlider" min="0" max="100" value="8" oninput="onVolumeChange(this.value)" style="flex:1;accent-color:#00ff88;height:4px;">
+          <span style="font-size:13px;">&#x1F50A;</span>
         </div>
       </div>
     </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #1a3a1a;">
-      <div><div id="langLabel" style="font-size:14px;font-weight:700;color:#fff;"></div><div id="langSub" style="font-size:11px;color:#555;margin-top:2px;"></div></div>
-      <div style="display:flex;border:1px solid #333;border-radius:10px;overflow:hidden;">
-        <button id="langEnBtn" onclick="setLang('en')" style="padding:7px 14px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#1a1a1a;color:#666;">EN</button>
-        <button id="langArBtn" onclick="setLang('ar')" style="padding:7px 14px;font-size:12px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#2ecc71;color:#fff;">&#x639;&#x631;&#x628;&#x64A;</button>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1e4060;">
+      <div><div id="langLabel" style="font-size:13px;font-weight:700;color:#d8eee0;"></div><div id="langSub" style="font-size:10px;color:#2a4838;margin-top:2px;"></div></div>
+      <div style="display:flex;border:1px solid #1e4060;border-radius:10px;overflow:hidden;">
+        <button id="langEnBtn" onclick="setLang('en')" style="padding:6px 13px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#0f1820;color:#6a9080;">EN</button>
+        <button id="langArBtn" onclick="setLang('ar')" style="padding:6px 13px;font-size:11px;font-weight:700;border:none;cursor:pointer;font-family:Cairo,sans-serif;background:#00ff88;color:#000;">&#x639;&#x631;&#x628;&#x64A;</button>
       </div>
     </div>
-    <div style="margin-top:20px;text-align:center;font-size:11px;color:#252525;">Prototype by Keme Games &middot; 2026</div>
+    <div style="margin-top:18px;text-align:center;font-size:10px;color:#2a4838;">Prototype by Keme Games &middot; 2026</div>
   </div>
 </div>
 
