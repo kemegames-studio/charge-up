@@ -135,8 +135,8 @@ function _saveCloud() {
 function _syncLeaderboard(state) {
   if (!_cloudReady || !_db || !_uid) return;
   var s = state || _collectState();
-  var update = {};
-  update["players." + _uid] = {
+  /* Build a proper nested object — dotted string keys in set() are literal, not paths */
+  var entry = {
     name:        s.profileName   || "Player",
     avatar:      s.profileAvatar || "😎",
     xp:          s.xp            || 0,
@@ -144,9 +144,10 @@ function _syncLeaderboard(state) {
     playerLevel: s.playerLevel   || 1,
     updatedAt:   Date.now()
   };
-  /* set with merge so other players' entries are never overwritten */
+  var nested = { players: {} };
+  nested.players[_uid] = entry;
   _db.collection("meta").doc("leaderboard")
-    .set(update, { merge: true })
+    .set(nested, { merge: true })
     .catch(function(err) { console.warn("Leaderboard sync failed:", err.message); });
 }
 
