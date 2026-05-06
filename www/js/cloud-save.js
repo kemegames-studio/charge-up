@@ -135,15 +135,18 @@ function _saveCloud() {
 function _syncLeaderboard(state) {
   if (!_cloudReady || !_db || !_uid) return;
   var s = state || _collectState();
-  _db.collection("leaderboard").doc(_uid)
-    .set({
-      name:        s.profileName   || "Player",
-      avatar:      s.profileAvatar || "😎",
-      xp:          s.xp            || 0,
-      thndr:       s.thndr         || 0,
-      playerLevel: s.playerLevel   || 1,
-      updatedAt:   Date.now()
-    })
+  var update = {};
+  update["players." + _uid] = {
+    name:        s.profileName   || "Player",
+    avatar:      s.profileAvatar || "😎",
+    xp:          s.xp            || 0,
+    thndr:       s.thndr         || 0,
+    playerLevel: s.playerLevel   || 1,
+    updatedAt:   Date.now()
+  };
+  /* set with merge so other players' entries are never overwritten */
+  _db.collection("meta").doc("leaderboard")
+    .set(update, { merge: true })
     .catch(function(err) { console.warn("Leaderboard sync failed:", err.message); });
 }
 
@@ -159,25 +162,19 @@ function fetchLeaderboard(callback) {
     return;
   }
 
-  /* Query players collection directly — everyone's data is already there */
-  _db.collection("players")
-    .limit(100)
-    .get()
-    .then(function(snap) {
+  _db.collection("meta").doc("leaderboard").get()
+    .then(function(doc) {
       var rows = [];
       var myInList = false;
-      snap.forEach(function(doc) {
-        var d = doc.data();
-        rows.push({
-          uid:         doc.id,
-          name:        d.profileName   || "Player",
-          avatar:      d.profileAvatar || "😎",
-          xp:          d.xp            || 0,
-          thndr:       d.thndr         || 0,
-          playerLevel: d.playerLevel   || 1
+      if (doc.exists) {
+        var data = doc.data().players || {};
+        Object.keys(data).forEach(function(uid) {
+          var p = data[uid];
+          rows.push({ uid: uid, name: p.name || "Player", avatar: p.avatar || "😎",
+                      xp: p.xp || 0, thndr: p.thndr || 0, playerLevel: p.playerLevel || 1 });
+          if (uid === _uid) myInList = true;
         });
-        if (doc.id === _uid) myInList = true;
-      });
+      }
       if (!myInList) rows.push(_selfEntry());
       rows.sort(function(a, b) { return (b.xp || 0) - (a.xp || 0); });
       callback(rows, _uid);
@@ -197,13 +194,7 @@ function loadProgress() {
         if (doc.exists) {
           var d = doc.data();
           _applyState(d);
-          _syncLeaderboard({    // pass data directly — no timing ambiguity
-            profileName:   d.profileName   || "Player",
-            profileAvatar: d.profileAvatar || "😎",
-            xp:            d.xp            || 0,
-            thndr:         d.thndr         || 0,
-            playerLevel:   d.playerLevel   || 1
-          });
+          _syncLeaderboard();   // backfill shared leaderboard doc on every load
         } else {
           /* no cloud data — check local */
           loadProgressLocal();
