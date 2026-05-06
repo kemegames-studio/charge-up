@@ -1,0 +1,102 @@
+/* ════════ LANGUAGE ════════ */
+var currentLang = "en";
+var S = {
+  en: {
+    play:"PLAY", locked:"LOCKED",
+    hint:"Drag from plug to phone - Wires can't cross - Phone moves on hard levels",
+    msgStart:"Drag from plug to phone",
+    msgDead:"Battery dead!",
+    msgMoved:"Phone moved! Reconnect.",
+    msgCross:"Wires can't cross!",
+    msgDone:function(d,tot){ return d+"/"+tot+" connected - keep going!"; },
+    msgWin:function(b){ return "Phone charged! Battery "+b+"%"; },
+    msgWire:function(n){ return "Wire "+n+" - drag to phone"; },
+    resetBtn:"Restart", prevBtn:"Prev", nextBtn:"Next",
+    winTitle:"CHARGED!", winSub:"Phone charged successfully", continueBtn:"CONTINUE", batteryLeft:"Battery left:",
+    difficulty:["Tutorial","Tutorial","Tutorial","Tutorial","Tutorial","Easy","Easy","Easy","Easy","Easy","Easy","Easy","Medium","Medium","Medium","Medium","Medium","Medium","Medium","Medium","Hard","Hard","Hard","Hard","Hard","Hard","Hard","Hard","Hard","Hard","Hard","Hard","Expert","Expert","Expert","Expert","Expert","Expert","Expert","Expert","Expert","Expert","Master","Master","Master","Master","Master","Master","Master","Master"],
+    sfxLabel:"Sound Effects", sfxSub:"Win & unlock sounds",
+    musicLabel:"Music", musicSub:"Background music",
+    volLabel:"Volume", langLabel:"Language", langSub:"App language"
+  },
+  ar: {
+    play:"العب",
+    locked:"مقفول",
+    hint:"اسحب من 🔌 لحد 📱",
+    msgStart:"اسحب من 🔌 لحد 📱",
+    msgDead:"💀 البطارية فرغت!",
+    msgMoved:"📱 الموبايل اتحرك! وصل من جديد.",
+    msgCross:"⚡ الأسلاك ستتقاطع!",
+    msgDone:function(d,tot){ return "✅ "+d+"/"+tot+" تم - اكمل!"; },
+    msgWin:function(b){ return "🎉 تم الشحن! بطارية "+b+"%"; },
+    msgWire:function(n){ return "سلك "+n+" - اسحب للموبايل 📱"; },
+    resetBtn:"إعادة", prevBtn:"السابق", nextBtn:"التالي",
+    winTitle:"شُحِنت!",
+    winSub:"تم شحن الموبايل بنجاح",
+    continueBtn:"استمرار",
+    batteryLeft:"البطارية:",
+    difficulty:["تعليمي","تعليمي","تعليمي","تعليمي","تعليمي","سهل","سهل","سهل","سهل","سهل","سهل","سهل","متوسط","متوسط","متوسط","متوسط","متوسط","متوسط","متوسط","متوسط","صعب","صعب","صعب","صعب","صعب","صعب","صعب","صعب","صعب","صعب","صعب","صعب","خبير","خبير","خبير","خبير","خبير","خبير","خبير","خبير","خبير","خبير","أسطورة","أسطورة","أسطورة","أسطورة","أسطورة","أسطورة","أسطورة","أسطورة"],
+    sfxLabel:"المؤثرات الصوتية", sfxSub:"أصوات الفوز والفتح",
+    musicLabel:"الموسيقى", musicSub:"موسيقى الخلفية",
+    volLabel:"مستوى الصوت",
+    langLabel:"اللغة", langSub:"لغة التطبيق"
+  }
+};
+
+function getLang() { return S[currentLang]; }
+
+/* ════════ CONSTANTS ════════ */
+/* ════════ CONSTANTS ════════ */
+var GRID=6;
+var COLORS=["#e74c3c","#3498db","#2ecc71","#f39c12"];
+var LEVELS=[
+  {label:"Level 1", phone:{x:2,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2}], walls:[], moveEvery:0},
+  {label:"Level 2", phone:{x:3,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[], moveEvery:0},
+  {label:"Level 3", phone:{x:2,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:4,y:1},{x:3,y:4}], moveEvery:0},
+  {label:"Level 4", phone:{x:3,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:2,y:1},{x:4,y:1},{x:1,y:3},{x:4,y:3}], moveEvery:0},
+  {label:"Level 5", phone:{x:2,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:2,id:1},{x:0,y:5,id:2},{x:3,y:5,id:3}], walls:[{x:1,y:1},{x:3,y:1},{x:4,y:1},{x:1,y:3},{x:4,y:3},{x:1,y:4}], moveEvery:0},
+  {label:"Level 6", phone:{x:3,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:5,id:1},{x:0,y:5,id:2}], walls:[{x:2,y:2},{x:4,y:2}], moveEvery:0},
+  {label:"Level 7", phone:{x:1,y:4}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:5,y:5,id:2}], walls:[{x:2,y:1},{x:2,y:3},{x:4,y:2}], moveEvery:0},
+  {label:"Level 8", phone:{x:4,y:1}, outlets:[{x:0,y:0,id:0},{x:0,y:5,id:1},{x:5,y:3,id:2},{x:3,y:5,id:3}], walls:[{x:2,y:0},{x:2,y:2},{x:1,y:4}], moveEvery:0},
+  {label:"Level 9", phone:{x:2,y:4}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:2},{x:3,y:1},{x:4,y:3},{x:2,y:3}], moveEvery:0},
+  {label:"Level 10", phone:{x:3,y:3}, outlets:[{x:0,y:1,id:0},{x:5,y:1,id:1},{x:0,y:4,id:2},{x:5,y:4,id:3}], walls:[{x:2,y:0},{x:3,y:2},{x:1,y:3},{x:4,y:5}], moveEvery:0},
+  {label:"Level 11", phone:{x:1,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:5,y:5,id:2},{x:2,y:5,id:3}], walls:[{x:2,y:2},{x:3,y:1},{x:4,y:3},{x:1,y:4},{x:3,y:4}], moveEvery:0},
+  {label:"Level 12", phone:{x:4,y:4}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:0,y:5,id:2},{x:5,y:2,id:3}], walls:[{x:1,y:1},{x:2,y:3},{x:3,y:2},{x:4,y:1},{x:1,y:4}], moveEvery:0},
+  {label:"Level 13", phone:{x:2,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:1},{x:3,y:3},{x:4,y:2},{x:1,y:4},{x:3,y:5}], moveEvery:0},
+  {label:"Level 14", phone:{x:3,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:2,y:5,id:2},{x:5,y:4,id:3}], walls:[{x:1,y:2},{x:2,y:1},{x:4,y:1},{x:3,y:3},{x:0,y:4},{x:4,y:4}], moveEvery:0},
+  {label:"Level 15", phone:{x:1,y:3}, outlets:[{x:0,y:0,id:0},{x:4,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:2,y:0},{x:1,y:2},{x:3,y:2},{x:2,y:4},{x:4,y:3},{x:5,y:1}], moveEvery:0},
+  {label:"Level 16", phone:{x:4,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:3,id:2},{x:3,y:5,id:3}], walls:[{x:1,y:1},{x:3,y:1},{x:2,y:3},{x:4,y:4},{x:1,y:5},{x:5,y:2}], moveEvery:0},
+  {label:"Level 17", phone:{x:3,y:4}, outlets:[{x:1,y:0,id:0},{x:5,y:1,id:1},{x:0,y:4,id:2},{x:5,y:5,id:3}], walls:[{x:2,y:1},{x:0,y:2},{x:3,y:2},{x:4,y:3},{x:1,y:3},{x:2,y:5}], moveEvery:0},
+  {label:"Level 18", phone:{x:2,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:3,id:3}], walls:[{x:1,y:2},{x:3,y:1},{x:4,y:2},{x:2,y:3},{x:3,y:4},{x:1,y:4},{x:4,y:5}], moveEvery:0},
+  {label:"Level 19", phone:{x:4,y:3}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:5,y:2,id:2},{x:1,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:2},{x:4,y:1},{x:0,y:3},{x:3,y:3},{x:2,y:5},{x:5,y:4}], moveEvery:0},
+  {label:"Level 20", phone:{x:1,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:4,y:5,id:3}], walls:[{x:2,y:1},{x:1,y:3},{x:3,y:2},{x:4,y:2},{x:5,y:3},{x:2,y:4},{x:3,y:5}], moveEvery:0},
+  {label:"Level 21", phone:{x:3,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:4,y:1},{x:2,y:2},{x:3,y:2},{x:1,y:4},{x:4,y:4},{x:2,y:3}], moveEvery:9000},
+  {label:"Level 22", phone:{x:2,y:4}, outlets:[{x:1,y:0,id:0},{x:4,y:0,id:1},{x:0,y:3,id:2},{x:5,y:4,id:3}], walls:[{x:2,y:1},{x:3,y:2},{x:1,y:2},{x:4,y:3},{x:0,y:4},{x:3,y:5},{x:5,y:1}], moveEvery:9000},
+  {label:"Level 23", phone:{x:4,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:2,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:2},{x:3,y:1},{x:4,y:3},{x:0,y:3},{x:1,y:5},{x:4,y:4}], moveEvery:9000},
+  {label:"Level 24", phone:{x:1,y:1}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:5,y:2,id:2},{x:0,y:5,id:3}], walls:[{x:2,y:1},{x:1,y:3},{x:3,y:2},{x:4,y:1},{x:2,y:4},{x:5,y:3},{x:3,y:5}], moveEvery:9000},
+  {label:"Level 25", phone:{x:3,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:1,id:1},{x:1,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:0},{x:4,y:2},{x:0,y:2},{x:3,y:3},{x:2,y:4},{x:4,y:5}], moveEvery:8000},
+  {label:"Level 26", phone:{x:4,y:4}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:4,id:2},{x:3,y:5,id:3}], walls:[{x:1,y:2},{x:3,y:1},{x:2,y:3},{x:4,y:2},{x:5,y:3},{x:1,y:5},{x:3,y:4}], moveEvery:8000},
+  {label:"Level 27", phone:{x:2,y:1}, outlets:[{x:0,y:0,id:0},{x:4,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:3,y:0},{x:2,y:3},{x:4,y:2},{x:1,y:4},{x:3,y:4},{x:5,y:2}], moveEvery:8000},
+  {label:"Level 28", phone:{x:3,y:4}, outlets:[{x:0,y:1,id:0},{x:5,y:0,id:1},{x:1,y:5,id:2},{x:5,y:4,id:3}], walls:[{x:2,y:0},{x:1,y:2},{x:3,y:1},{x:4,y:3},{x:0,y:3},{x:2,y:5},{x:4,y:4}], moveEvery:8000},
+  {label:"Level 29", phone:{x:1,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:3,y:3,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:2},{x:4,y:1},{x:0,y:4},{x:3,y:2},{x:2,y:5},{x:4,y:4}], moveEvery:7500},
+  {label:"Level 30", phone:{x:4,y:2}, outlets:[{x:0,y:0,id:0},{x:2,y:0,id:1},{x:0,y:5,id:2},{x:5,y:3,id:3}], walls:[{x:1,y:2},{x:3,y:1},{x:5,y:1},{x:2,y:3},{x:4,y:3},{x:1,y:4},{x:3,y:5}], moveEvery:7500},
+  {label:"Level 31", phone:{x:2,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:4,y:5,id:3}], walls:[{x:1,y:1},{x:3,y:0},{x:2,y:2},{x:4,y:1},{x:1,y:3},{x:3,y:3},{x:5,y:4},{x:2,y:5}], moveEvery:7000},
+  {label:"Level 32", phone:{x:3,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:1,y:4,id:2},{x:5,y:5,id:3}], walls:[{x:2,y:0},{x:1,y:2},{x:3,y:2},{x:4,y:1},{x:0,y:3},{x:2,y:4},{x:4,y:3},{x:3,y:5}], moveEvery:7000},
+  {label:"Level 33", phone:{x:4,y:3}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:5,y:2,id:2},{x:0,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:1},{x:4,y:0},{x:1,y:3},{x:3,y:2},{x:2,y:4},{x:4,y:4},{x:5,y:3}], moveEvery:6000},
+  {label:"Level 34", phone:{x:1,y:4}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:2,y:3,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:3,y:1},{x:2,y:2},{x:4,y:2},{x:0,y:3},{x:3,y:4},{x:1,y:5},{x:4,y:5}], moveEvery:6000},
+  {label:"Level 35", phone:{x:3,y:2}, outlets:[{x:1,y:0,id:0},{x:5,y:1,id:1},{x:0,y:4,id:2},{x:4,y:5,id:3}], walls:[{x:0,y:1},{x:2,y:1},{x:4,y:0},{x:1,y:3},{x:3,y:3},{x:5,y:2},{x:2,y:5},{x:4,y:4}], moveEvery:6000},
+  {label:"Level 36", phone:{x:2,y:4}, outlets:[{x:0,y:0,id:0},{x:4,y:0,id:1},{x:5,y:3,id:2},{x:1,y:5,id:3}], walls:[{x:1,y:1},{x:3,y:0},{x:2,y:2},{x:4,y:2},{x:0,y:3},{x:3,y:3},{x:1,y:4},{x:5,y:4}], moveEvery:6000},
+  {label:"Level 37", phone:{x:4,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:3,id:2},{x:3,y:5,id:3}], walls:[{x:1,y:2},{x:2,y:1},{x:3,y:2},{x:5,y:1},{x:0,y:4},{x:2,y:4},{x:4,y:3},{x:4,y:5}], moveEvery:5500},
+  {label:"Level 38", phone:{x:1,y:2}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:5,y:2,id:2},{x:0,y:5,id:3}], walls:[{x:2,y:0},{x:1,y:1},{x:4,y:1},{x:2,y:3},{x:3,y:2},{x:5,y:3},{x:1,y:5},{x:3,y:4}], moveEvery:5500},
+  {label:"Level 39", phone:{x:3,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:4,y:1},{x:2,y:0},{x:0,y:2},{x:3,y:2},{x:5,y:2},{x:1,y:4},{x:4,y:4},{x:2,y:5}], moveEvery:5500},
+  {label:"Level 40", phone:{x:2,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:1,id:1},{x:1,y:5,id:2},{x:5,y:4,id:3}], walls:[{x:1,y:2},{x:3,y:0},{x:4,y:2},{x:2,y:3},{x:0,y:3},{x:3,y:3},{x:4,y:4},{x:1,y:4},{x:2,y:5}], moveEvery:5000},
+  {label:"Level 41", phone:{x:4,y:4}, outlets:[{x:0,y:0,id:0},{x:2,y:0,id:1},{x:5,y:2,id:2},{x:0,y:4,id:3}], walls:[{x:1,y:1},{x:3,y:1},{x:5,y:0},{x:2,y:2},{x:4,y:1},{x:1,y:3},{x:3,y:3},{x:0,y:5},{x:4,y:5}], moveEvery:5000},
+  {label:"Level 42", phone:{x:1,y:1}, outlets:[{x:0,y:0,id:0},{x:4,y:0,id:1},{x:5,y:3,id:2},{x:2,y:5,id:3}], walls:[{x:2,y:1},{x:3,y:0},{x:1,y:2},{x:4,y:2},{x:0,y:3},{x:3,y:3},{x:5,y:4},{x:1,y:5},{x:4,y:4}], moveEvery:5000},
+  {label:"Level 43", phone:{x:3,y:2}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:0},{x:4,y:1},{x:1,y:3},{x:3,y:1},{x:2,y:3},{x:4,y:3},{x:0,y:4},{x:3,y:4},{x:5,y:2}], moveEvery:4500},
+  {label:"Level 44", phone:{x:2,y:4}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:5,y:2,id:2},{x:1,y:5,id:3}], walls:[{x:1,y:1},{x:4,y:0},{x:2,y:1},{x:3,y:2},{x:5,y:1},{x:0,y:3},{x:4,y:2},{x:1,y:4},{x:3,y:4},{x:5,y:4}], moveEvery:4500},
+  {label:"Level 45", phone:{x:4,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:4,id:2},{x:4,y:5,id:3}], walls:[{x:1,y:2},{x:2,y:1},{x:3,y:0},{x:4,y:1},{x:5,y:2},{x:0,y:3},{x:2,y:3},{x:3,y:3},{x:1,y:5},{x:5,y:4}], moveEvery:4500},
+  {label:"Level 46", phone:{x:1,y:3}, outlets:[{x:0,y:0,id:0},{x:4,y:0,id:1},{x:5,y:3,id:2},{x:2,y:5,id:3}], walls:[{x:2,y:0},{x:1,y:1},{x:3,y:1},{x:5,y:1},{x:0,y:2},{x:4,y:2},{x:2,y:3},{x:3,y:4},{x:0,y:5},{x:4,y:5}], moveEvery:4000},
+  {label:"Level 47", phone:{x:3,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:1,y:4,id:2},{x:5,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:2},{x:4,y:1},{x:3,y:0},{x:0,y:2},{x:5,y:2},{x:2,y:4},{x:4,y:3},{x:1,y:5},{x:3,y:4}], moveEvery:4000},
+  {label:"Level 48", phone:{x:2,y:2}, outlets:[{x:0,y:0,id:0},{x:3,y:0,id:1},{x:5,y:1,id:2},{x:0,y:5,id:3}], walls:[{x:1,y:0},{x:4,y:0},{x:1,y:2},{x:3,y:1},{x:5,y:2},{x:0,y:3},{x:2,y:3},{x:4,y:3},{x:1,y:5},{x:3,y:5}], moveEvery:4000},
+  {label:"Level 49", phone:{x:4,y:3}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:3,id:2},{x:3,y:5,id:3}], walls:[{x:1,y:1},{x:2,y:1},{x:0,y:2},{x:3,y:2},{x:1,y:3},{x:5,y:2},{x:2,y:5},{x:4,y:5}], moveEvery:3500},
+  {label:"Level 50", phone:{x:1,y:1}, outlets:[{x:0,y:0,id:0},{x:5,y:0,id:1},{x:0,y:5,id:2},{x:5,y:5,id:3}], walls:[{x:2,y:0},{x:4,y:0},{x:1,y:2},{x:3,y:1},{x:5,y:1},{x:0,y:3},{x:2,y:3},{x:4,y:2},{x:1,y:4},{x:3,y:4},{x:5,y:3}], moveEvery:3500}
+];
