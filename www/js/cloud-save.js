@@ -163,7 +163,7 @@ function fetchLeaderboard(callback) {
   }
 
   if (!_cloudReady || !_db) {
-    callback([_selfEntry()], _uid);
+    callback([_selfEntry()], _uid, "OFFLINE: cloudReady="+_cloudReady+" db="+!!_db+" uid="+_uid);
     return;
   }
 
@@ -171,9 +171,13 @@ function fetchLeaderboard(callback) {
     .then(function(doc) {
       var rows = [];
       var myInList = false;
+      var dbg = "exists="+doc.exists+" uid="+(_uid||"null");
       if (doc.exists) {
-        var data = doc.data().players || {};
-        Object.keys(data).forEach(function(uid) {
+        var raw = doc.data();
+        var data = (raw && raw.players) ? raw.players : {};
+        var keys = Object.keys(data);
+        dbg += " players="+keys.length+" keys="+keys.join(",");
+        keys.forEach(function(uid) {
           var p = data[uid];
           rows.push({ uid: uid, name: p.name || "Player", avatar: p.avatar || "😎",
                       xp: p.xp || 0, thndr: p.thndr || 0, playerLevel: p.playerLevel || 1 });
@@ -182,11 +186,11 @@ function fetchLeaderboard(callback) {
       }
       if (!myInList) rows.push(_selfEntry());
       rows.sort(function(a, b) { return (b.xp || 0) - (a.xp || 0); });
-      callback(rows, _uid);
+      callback(rows, _uid, dbg);
     })
     .catch(function(err) {
-      console.warn("Leaderboard fetch failed:", err.message);
-      callback([_selfEntry()], _uid);
+      var dbg = "FETCH ERROR: "+err.code+" — "+err.message;
+      callback([_selfEntry()], _uid, dbg);
     });
 }
 

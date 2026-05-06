@@ -9,8 +9,8 @@ function openLeaderboard() {
 
 function refreshLeaderboard() {
   renderLeaderboardLoading();
-  fetchLeaderboard(function(rows, myUid) {
-    renderLeaderboard(rows, myUid);
+  fetchLeaderboard(function(rows, myUid, debugInfo) {
+    renderLeaderboard(rows, myUid, debugInfo);
   });
 }
 
@@ -26,9 +26,13 @@ function renderLeaderboardLoading() {
   document.getElementById("lbList").innerHTML = "";
 }
 
-function renderLeaderboard(rows, myUid) {
+function renderLeaderboard(rows, myUid, debugInfo) {
   var podiumEl = document.getElementById("lbPodium");
   var listEl   = document.getElementById("lbList");
+  /* Debug bar — remove once leaderboard is confirmed working */
+  var dbg = document.getElementById("lbDebug");
+  if (!dbg) { dbg = document.createElement("div"); dbg.id = "lbDebug"; dbg.style.cssText = "padding:6px 16px;font-size:9px;color:#2a5040;font-family:monospace;border-bottom:1px solid #0d1e18;word-break:break-all;"; listEl.parentNode.insertBefore(dbg, listEl); }
+  dbg.textContent = debugInfo || "";
   podiumEl.innerHTML = "";
   listEl.innerHTML   = "";
 
