@@ -1,0 +1,171 @@
+/* ════════ CLOUD SAVE — Firebase + LocalStorage ════════ */
+
+var FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyCbbZ1xntVWgD_61-pFZ4iIt2HnLCDtHCs",
+  authDomain:        "charge-up-61258.firebaseapp.com",
+  projectId:         "charge-up-61258",
+  storageBucket:     "charge-up-61258.firebasestorage.app",
+  messagingSenderId: "1048134678058",
+  appId:             "1:1048134678058:web:d8ea2e6d120a7bf795b553"
+};
+
+var _db = null;
+var _uid = null;
+var _saveTimeout = null;
+var _cloudReady = false;
+
+/* ── Init ── */
+function initCloudSave() {
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    firebase.auth().signInAnonymously()
+      .then(function(result) {
+        _uid = result.user.uid;
+        _db  = firebase.firestore();
+        _cloudReady = true;
+        _saveLocalUid(_uid);
+        loadProgress();
+      })
+      .catch(function(err) {
+        console.warn("Cloud auth failed, using local save:", err.message);
+        loadProgressLocal();
+      });
+  } catch(e) {
+    console.warn("Firebase init failed, using local save:", e.message);
+    loadProgressLocal();
+  }
+}
+
+function _saveLocalUid(uid) {
+  try { localStorage.setItem("cu_uid", uid); } catch(e) {}
+}
+
+/* ── Collect all game state ── */
+function _collectState() {
+  return {
+    completedLevels: Array.from(completedLevels),
+    selectedLevel:   selectedLevel   || 0,
+    xp:              xp              || 0,
+    thndr:           thndr           || 0,
+    playerLevel:     playerLevel     || 1,
+    lives:           lives           || 5,
+    coins:           coins           || 0,
+    soundSfx:        soundSettings   ? soundSettings.sfx    : true,
+    soundBgm:        soundSettings   ? soundSettings.bgm    : true,
+    soundVol:        soundSettings   ? soundSettings.volume : 0.08,
+    lang:            currentLang     || "en",
+    savedAt:         Date.now()
+  };
+}
+
+/* ── Apply loaded state to game ── */
+function _applyState(data) {
+  if (!data) return;
+
+  /* completed levels */
+  completedLevels = new Set(data.completedLevels || []);
+
+  /* progress */
+  selectedLevel = data.selectedLevel || 0;
+  xp            = data.xp            || 0;
+  thndr         = data.thndr         || 0;
+  playerLevel   = data.playerLevel   || 1;
+  lives         = data.lives         || 5;
+  coins         = data.coins         || 0;
+
+  /* sound */
+  if (soundSettings) {
+    soundSettings.sfx    = data.soundSfx !== undefined ? data.soundSfx : true;
+    soundSettings.bgm    = data.soundBgm !== undefined ? data.soundBgm : true;
+    soundSettings.volume = data.soundVol !== undefined ? data.soundVol : 0.08;
+  }
+
+  /* language */
+  if (data.lang) { currentLang = data.lang; }
+
+  /* refresh all UI */
+  if (typeof updateXpDisplay    === "function") updateXpDisplay();
+  if (typeof updateLivesDisplay === "function") updateLivesDisplay();
+  if (typeof updateCoinsDisplay === "function") updateCoinsDisplay();
+  if (typeof buildLevelMap      === "function") buildLevelMap(false);
+  if (typeof updateTogglesUI    === "function") updateTogglesUI();
+
+  _showSaveToast("☁️ Progress loaded");
+}
+
+/* ── Save (debounced 2s) ── */
+function saveProgress() {
+  _saveLocal();
+  if (!_cloudReady) return;
+  clearTimeout(_saveTimeout);
+  _saveTimeout = setTimeout(_saveCloud, 2000);
+}
+
+function _saveLocal() {
+  try {
+    localStorage.setItem("cu_save", JSON.stringify(_collectState()));
+  } catch(e) {}
+}
+
+function _saveCloud() {
+  if (!_cloudReady || !_db || !_uid) return;
+  _db.collection("players").doc(_uid)
+    .set(_collectState())
+    .then(function() { _showSaveToast("☁️ Saved"); })
+    .catch(function(err) { console.warn("Cloud save failed:", err.message); });
+}
+
+/* ── Load ── */
+function loadProgress() {
+  /* try cloud first */
+  if (_cloudReady && _db && _uid) {
+    _db.collection("players").doc(_uid).get()
+      .then(function(doc) {
+        if (doc.exists) {
+          _applyState(doc.data());
+        } else {
+          /* no cloud data — check local */
+          loadProgressLocal();
+          /* push local to cloud */
+          _saveCloud();
+        }
+      })
+      .catch(function(err) {
+        console.warn("Cloud load failed, using local:", err.message);
+        loadProgressLocal();
+      });
+  } else {
+    loadProgressLocal();
+  }
+}
+
+function loadProgressLocal() {
+  try {
+    var raw = localStorage.getItem("cu_save");
+    if (raw) _applyState(JSON.parse(raw));
+  } catch(e) {}
+}
+
+/* ── Toast notification ── */
+function _showSaveToast(msg) {
+  var existing = document.getElementById("saveToast");
+  if (existing) existing.remove();
+  var t = document.createElement("div");
+  t.id = "saveToast";
+  t.textContent = msg;
+  t.style.cssText = [
+    "position:fixed","bottom:90px","left:50%","transform:translateX(-50%)",
+    "background:rgba(0,255,136,.12)","border:1px solid rgba(0,255,136,.3)",
+    "color:#00ff88","font-size:11px","font-weight:700","font-family:Orbitron,sans-serif",
+    "letter-spacing:1px","padding:7px 18px","border-radius:50px","z-index:9000",
+    "pointer-events:none","opacity:1","transition:opacity .5s"
+  ].join(";");
+  document.body.appendChild(t);
+  setTimeout(function() { t.style.opacity="0"; }, 1800);
+  setTimeout(function() { if(t.parentNode) t.remove(); }, 2400);
+}
+
+/* ── Auto-save triggers (called from other modules) ── */
+function onLevelComplete()  { saveProgress(); }
+function onSettingsChange() { saveProgress(); }
+function onCoinsChange()    { saveProgress(); }

@@ -30,5 +30,6 @@ window.addEventListener("load",function(){
   setLang("en");
   var ov=document.getElementById("settingsOverlay");
   if (ov) ov.addEventListener("click",function(e){if(e.target===this)closeSettings();});
+  initCloudSave();
   runSplash();
 });

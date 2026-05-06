@@ -24,14 +24,16 @@ function updateTogglesUI() {
   var vl=document.getElementById("volLabel"); if(vl) vl.textContent=L.volLabel;
   document.getElementById("langSub").textContent=L.langSub;
 }
-function toggleSfx() { soundSettings.sfx=!soundSettings.sfx; updateTogglesUI(); }
+function toggleSfx() { soundSettings.sfx=!soundSettings.sfx; updateTogglesUI(); onSettingsChange(); }
 function toggleBgm() {
   soundSettings.bgm=!soundSettings.bgm; updateTogglesUI();
   if (soundSettings.bgm) { startBgm(); } else { stopBgm(); }
+  onSettingsChange();
 }
 function onVolumeChange(val) {
   soundSettings.volume = parseInt(val) / 100;
   if (bgmGain) bgmGain.gain.value = soundSettings.volume;
+  onSettingsChange();
 }
 function setLang(lang) {
   currentLang=lang;
@@ -66,6 +68,7 @@ function setLang(lang) {
   updateTogglesUI();
   buildLevelMap(false);
   if (!document.getElementById("gameView").classList.contains("hidden")) setMsg(L.msgStart);
+  onSettingsChange();
 }
 
 /* ════════ WIN OVERLAY ════════ */
@@ -91,7 +94,7 @@ function showWinOverlay(battPct, reward) {
   startConfetti();
 }
 function hideWinOverlay() { document.getElementById("winOverlay").classList.remove("show"); stopConfetti(); }
-function onContinue() { hideWinOverlay(); setTimeout(function(){ goHome(true); },350); }
+function onContinue() { hideWinOverlay(); saveProgress(); setTimeout(function(){ goHome(true); },350); }
 function startConfetti() {
   var c=document.getElementById("confettiCanvas"); c.width=window.innerWidth; c.height=window.innerHeight;
   var cx=c.getContext("2d"); confettiParticles=[];
