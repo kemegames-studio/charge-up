@@ -129,16 +129,22 @@ function _saveCloud() {
     .set(state)
     .then(function() { _showSaveToast("☁️ Saved"); })
     .catch(function(err) { console.warn("Cloud save failed:", err.message); });
+  _syncLeaderboard(state);
+}
+
+function _syncLeaderboard(state) {
+  if (!_cloudReady || !_db || !_uid) return;
+  var s = state || _collectState();
   _db.collection("leaderboard").doc(_uid)
     .set({
-      name:        state.profileName   || "Player",
-      avatar:      state.profileAvatar || "😎",
-      xp:          state.xp           || 0,
-      thndr:       state.thndr        || 0,
-      playerLevel: state.playerLevel  || 1,
+      name:        s.profileName   || "Player",
+      avatar:      s.profileAvatar || "😎",
+      xp:          s.xp            || 0,
+      thndr:       s.thndr         || 0,
+      playerLevel: s.playerLevel   || 1,
       updatedAt:   Date.now()
     })
-    .catch(function(err) { console.warn("Leaderboard save failed:", err.message); });
+    .catch(function(err) { console.warn("Leaderboard sync failed:", err.message); });
 }
 
 function fetchLeaderboard(callback) {
@@ -168,6 +174,7 @@ function loadProgress() {
       .then(function(doc) {
         if (doc.exists) {
           _applyState(doc.data());
+          _syncLeaderboard();   // backfill leaderboard entry for existing players
         } else {
           /* no cloud data — check local */
           loadProgressLocal();
