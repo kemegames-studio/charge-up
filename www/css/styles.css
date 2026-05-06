@@ -741,7 +741,7 @@ canvas {
   color: #00ff88;
 }
 
-/* ── BOTTOM NAV: THNDR CENTER BUTTON ── */
+/* ── BOTTOM NAV: HOME CENTER BUTTON ── */
 .h-nav-btn.h-nav-center {
   position: relative;
   flex: 1.2;
@@ -751,13 +751,17 @@ canvas {
   padding: 16px 0 14px;
   box-shadow: 0 0 20px rgba(0,255,136,.35), 0 -4px 16px rgba(0,255,136,.2);
   border: 1.5px solid rgba(0,255,136,.4);
-  animation: thndrPulse 2.4s ease-in-out infinite;
+  animation: homeCenterPulse 2.4s ease-in-out infinite;
 }
 .h-nav-btn.h-nav-center .h-nav-label {
-  color: #00ff88;
+  color: var(--neon);
   font-size: 8px;
+  font-weight: 900;
 }
-@keyframes thndrPulse {
+.h-nav-btn.h-nav-center .h-nav-icon {
+  filter: drop-shadow(0 0 8px rgba(0,255,136,.5));
+}
+@keyframes homeCenterPulse {
   0%,100% { box-shadow: 0 0 16px rgba(0,255,136,.35), 0 -4px 14px rgba(0,255,136,.2); }
   50%      { box-shadow: 0 0 32px rgba(0,255,136,.65), 0 -6px 24px rgba(0,255,136,.4); }
 }

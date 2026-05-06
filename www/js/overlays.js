@@ -79,8 +79,8 @@ function showWinOverlay(battPct, reward) {
   document.getElementById("winBattery").textContent=battPct+"%";
   var xpBanner=document.getElementById("winXpReward");
   var thndrBanner=document.getElementById("winThndrReward");
-  if (xpBanner && reward) xpBanner.textContent="+"+(reward.xp||0)+" XP";
-  if (thndrBanner && reward) thndrBanner.textContent="+"+(reward.thndr||0)+" ⚡";
+  if (xpBanner && reward) xpBanner.innerHTML='<span style="font-size:16px;margin-right:4px;">&#11088;</span>+'+(reward.xp||0)+' XP';
+  if (thndrBanner && reward) thndrBanner.innerHTML='<span style="font-size:16px;margin-right:4px;">&#128176;</span>+'+(reward.thndr||0);
   var wt2=document.querySelector(".win-title"); if(wt2) wt2.textContent=L.winTitle||"CHARGED!";
   document.querySelector(".win-subtitle").textContent=L.winSub;
   document.querySelector(".win-bat-label").textContent=L.batteryLeft;
