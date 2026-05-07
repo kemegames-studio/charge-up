@@ -182,15 +182,11 @@ body {
 
 /* ── HAMBURGER BUTTON ── */
 .hamburger-btn {
-  position: absolute;
-  left: 14px;
-  top: calc(max(40px, env(safe-area-inset-top, 40px)) + 60px);
-  z-index: 10;
   width: 46px; height: 46px;
   background: rgba(255,255,255,.18);
   border: 1.5px solid rgba(255,255,255,.30);
   border-radius: 14px;
-  cursor: pointer;
+  cursor: pointer; flex-shrink: 0;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 5px; padding: 0;
@@ -591,18 +587,18 @@ body {
   text-transform: uppercase; letter-spacing: .8px;
 }
 .h-nav-btn.active .h-nav-label { color: #fff; }
-.h-nav-img { width: 34px; height: 34px; object-fit: contain; }
+.h-nav-img { width: 38px; height: 38px; object-fit: contain; }
 
 /* HOME center button — raised icon */
 .h-nav-btn.h-nav-center {
   position: relative; flex: 1.2;
-  margin-top: -20px;
+  margin-top: -22px;
   background: transparent; border: none;
   padding: 2px 0 10px;
 }
 .h-nav-btn.h-nav-center img {
-  width: 62px; height: 62px; object-fit: contain;
-  filter: drop-shadow(0 4px 12px rgba(68,187,255,.6));
+  width: 68px; height: 68px; object-fit: contain;
+  filter: drop-shadow(0 4px 14px rgba(68,187,255,.65));
 }
 .h-nav-btn.h-nav-center .h-nav-label { color: #fff; font-size: 8px; font-weight: 900; }
 

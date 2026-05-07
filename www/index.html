@@ -30,7 +30,7 @@
   <!-- Store Top Bar -->
   <div class="store-topbar">
     <div class="store-title-row">
-      <img src="img/figma/shop_bag.png" style="width:36px;height:36px;object-fit:contain;">
+      <img src="img/figma/shop_bag.png" style="width:40px;height:40px;object-fit:contain;">
       <span class="store-title-text" id="storeTitleTxt">STORE</span>
     </div>
     <div class="store-coin-pill">
@@ -66,32 +66,29 @@
 <!-- HOME VIEW -->
 <div class="view hidden" id="homeView">
   <!-- Floating Settings Button -->
-  <button class="hamburger-btn" id="hamburgerBtn" onclick="openMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  
   <div class="home-grid-bg"></div>
 
   <!-- TOP BAR -->
   <div class="h-topbar">
-    <!-- Avatar -->
-    <div class="h-avatar-wrap" onclick="openAvatarModal()">
-      <div class="h-avatar" id="avatarDisplay">😎</div>
-      <div class="h-avatar-name" id="avatarName">Player</div>
-    </div>
+    <!-- Hamburger menu button -->
+    <button class="hamburger-btn hamburger-inline" id="hamburgerBtn" onclick="openMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
     <!-- Lives + Coins -->
     <div class="h-stats">
       <div class="h-stat-pill h-lives">
-        <img src="img/figma/heart.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;">
+        <img src="img/figma/heart.png" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">
         <span class="h-stat-val" id="livesCount">5</span>
         <span class="h-stat-label">MAX</span>
       </div>
       <div class="h-stat-pill h-coins">
-        <img src="img/figma/gold_coin.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;">
+        <img src="img/figma/gold_coin.png" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">
         <span class="h-stat-val" id="coinCount">380</span>
         <button class="h-plus-btn">+</button>
       </div>
       <div class="h-stat-pill h-xp">
-        <img src="img/figma/star.png" style="width:22px;height:22px;object-fit:contain;flex-shrink:0;">
+        <img src="img/figma/star.png" style="width:26px;height:26px;object-fit:contain;flex-shrink:0;">
         <span class="h-stat-val" id="xpCount">0</span>
         <span class="h-stat-label">XP</span>
       </div>
@@ -111,15 +108,15 @@
   <!-- BOTTOM NAV BAR -->
   <div class="h-bottombar">
     <button class="h-nav-btn" onclick="openStore()">
-      <img src="img/figma/shop_bag.png" style="width:36px;height:36px;object-fit:contain;">
+      <img src="img/figma/shop_bag.png" style="width:40px;height:40px;object-fit:contain;">
       <span class="h-nav-label" id="navStoreLabel">STORE</span>
     </button>
     <button class="h-nav-btn h-nav-center active" onclick="navHome()">
-      <img src="img/figma/home.png" style="width:42px;height:42px;object-fit:contain;">
+      <img src="img/figma/home.png" style="width:48px;height:48px;object-fit:contain;">
       <span class="h-nav-label">HOME</span>
     </button>
     <button class="h-nav-btn" onclick="openLeaderboard()">
-      <img src="img/figma/trophy.png" style="width:36px;height:36px;object-fit:contain;">
+      <img src="img/figma/trophy.png" style="width:40px;height:40px;object-fit:contain;">
       <span class="h-nav-label">RANKS</span>
     </button>
   </div>
@@ -317,7 +314,7 @@
     <!-- Buttons -->
     <div class="lose-btn-row">
       <button class="lose-retry-btn" onclick="onRetry()" style="display:flex;align-items:center;justify-content:center;gap:10px;"><img src="img/figma/hammer.png" style="width:32px;height:32px;object-fit:contain;"><span class="lose-retry-label" id="loseRetryLabel">TRY AGAIN</span></button>
-      <button class="lose-home-btn" onclick="onLoseHome()" style="display:flex;align-items:center;justify-content:center;gap:10px;"><img src="img/figma/home.png" style="width:42px;height:42px;object-fit:contain;"><span id="loseHomeLabel" style="font-family:Orbitron,sans-serif;font-size:18px;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.2);">HOME</span></button>
+      <button class="lose-home-btn" onclick="onLoseHome()" style="display:flex;align-items:center;justify-content:center;gap:10px;"><img src="img/figma/home.png" style="width:48px;height:48px;object-fit:contain;"><span id="loseHomeLabel" style="font-family:Orbitron,sans-serif;font-size:18px;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.2);">HOME</span></button>
     </div>
   </div>
 </div>
@@ -384,7 +381,7 @@
   <div style="display:flex;align-items:center;justify-content:space-between;padding:max(52px,env(safe-area-inset-top,52px)) 20px 16px;flex-shrink:0;">
     <button onclick="closeLeaderboard()" style="background:transparent;border:none;cursor:pointer;display:flex;align-items:center;padding:4px;"><img src="img/icons/back_btn.png" style="width:40px;height:40px;object-fit:contain;"></button>
     <div style="font-family:Orbitron,sans-serif;font-size:17px;font-weight:900;color:#ffffff;letter-spacing:1px;text-shadow:0 2px 8px rgba(0,0,0,.3);">Leaderboard</div>
-    <button onclick="refreshLeaderboard()" style="background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.30);color:#fff;width:38px;height:38px;border-radius:12px;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);">&#x21BA;</button>
+    
   </div>
 
   <!-- Podium area (dark card bg) -->

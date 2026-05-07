@@ -281,8 +281,11 @@ function closeMenu() {
 }
 
 window.addEventListener("load", function() {
-  document.getElementById("avatarDisplay").textContent = profile.avatar;
-  document.getElementById("avatarName").textContent    = profile.name;
+  // avatar display now lives in menu drawer only
+  var ad = document.getElementById("avatarDisplay");
+  var an = document.getElementById("avatarName");
+  if (ad) ad.textContent = profile.avatar;
+  if (an) an.textContent = profile.name;
   // close avatar modal on bg click
   document.getElementById("avatarModal").addEventListener("click", function(e){
     if(e.target===this) closeAvatarModal();
