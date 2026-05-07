@@ -2,191 +2,222 @@
 
 function openLeaderboard() {
   var ov = document.getElementById("leaderboardOverlay");
-  ov.style.opacity = "1"; ov.style.pointerEvents = "all";
-  document.getElementById("leaderboardCard").style.transform = "translateY(0)";
+  ov.style.transform = "translateX(0)";
+  ov.style.opacity   = "1";
+  ov.style.pointerEvents = "all";
   refreshLeaderboard();
-}
-
-function refreshLeaderboard() {
-  renderLeaderboardLoading();
-  fetchLeaderboard(function(rows, myUid, debugInfo) {
-    renderLeaderboard(rows, myUid, debugInfo);
-  });
 }
 
 function closeLeaderboard() {
   var ov = document.getElementById("leaderboardOverlay");
-  ov.style.opacity = "0"; ov.style.pointerEvents = "none";
-  document.getElementById("leaderboardCard").style.transform = "translateY(60px)";
+  ov.style.transform = "translateX(100%)";
+  ov.style.opacity   = "0";
+  ov.style.pointerEvents = "none";
 }
 
-function renderLeaderboardLoading() {
+function refreshLeaderboard() {
   document.getElementById("lbPodium").innerHTML =
-    '<div style="color:#2a4838;font-family:Orbitron,sans-serif;font-size:13px;letter-spacing:2px;padding:40px 0;">LOADING...</div>';
+    '<div style="color:rgba(255,255,255,.7);font-family:Orbitron,sans-serif;font-size:12px;letter-spacing:2px;padding:60px 0;text-align:center;">LOADING...</div>';
   document.getElementById("lbList").innerHTML = "";
+  fetchLeaderboard(function(rows, myUid) {
+    renderLeaderboard(rows, myUid);
+  });
 }
 
-function renderLeaderboard(rows, myUid, debugInfo) {
+function renderLeaderboard(rows, myUid) {
   var podiumEl = document.getElementById("lbPodium");
   var listEl   = document.getElementById("lbList");
   podiumEl.innerHTML = "";
   listEl.innerHTML   = "";
 
   if (!rows || rows.length === 0) {
-    podiumEl.innerHTML = '<div style="color:#2a4838;font-family:Orbitron,sans-serif;font-size:12px;letter-spacing:2px;padding:40px 0;text-align:center;">NO PLAYERS YET<br><span style="font-size:10px;color:#1a3020">Win a level to appear here</span></div>';
+    podiumEl.innerHTML =
+      '<div style="color:rgba(255,255,255,.7);font-family:Orbitron,sans-serif;font-size:12px;letter-spacing:2px;padding:60px 0;text-align:center;">NO PLAYERS YET</div>';
     return;
   }
 
-  /* ── Podium (top 3) ── */
-  var podiumOrder = [1, 0, 2]; // silver, gold, bronze visual order
-  var podiumColors = ["#c0c0c0", "#ffd700", "#cd7f32"];
-  var podiumHeights = ["70px", "95px", "55px"];
-  var podiumLabels  = ["2ND", "1ST", "3RD"];
-  var podiumGlows   = [
-    "rgba(192,192,192,.35)",
-    "rgba(255,215,0,.45)",
-    "rgba(205,127,50,.35)"
-  ];
+  /* ── Podium (top 3): visual order [silver, gold, bronze] = indices [1,0,2] ── */
+  var order       = [1, 0, 2];
+  var circleSize  = ["76px", "92px", "76px"];
+  var emojiFSize  = ["30px", "38px", "30px"];
+  var borderColor = ["#a8b8b0", "#c8f135", "#c88832"];
 
-  podiumEl.style.display = "flex";
-  podiumEl.style.alignItems = "flex-end";
-  podiumEl.style.justifyContent = "center";
-  podiumEl.style.gap = "10px";
-  podiumEl.style.padding = "0 16px 8px";
+  podiumEl.style.cssText =
+    "display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:16px 16px 28px;";
 
   for (var pi = 0; pi < 3; pi++) {
-    var realIdx = podiumOrder[pi];
-    var p = rows[realIdx];
-    if (!p) continue;
-    var isMe = p.uid === myUid;
-    var col  = podiumColors[pi];
-    var glow = podiumGlows[pi];
+    var idx  = order[pi];
+    var p    = rows[idx];
+    var isMe = p && p.uid === myUid;
+    var isFirst = idx === 0;
 
-    var block = document.createElement("div");
-    block.style.cssText = [
-      "flex:1","display:flex","flex-direction:column","align-items:center",
-      "background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,transparent 100%)",
-      "border:1px solid " + col + "44",
-      "border-radius:14px 14px 0 0",
-      "padding:10px 6px 0",
-      "min-height:" + podiumHeights[pi],
-      "position:relative",
-      isMe ? "box-shadow:0 0 18px " + glow + ",inset 0 0 18px rgba(0,255,136,.06)" : ""
-    ].join(";");
+    var col = document.createElement("div");
+    col.style.cssText = "display:flex;flex-direction:column;align-items:center;flex:1;max-width:110px;";
 
-    var rankBadge = document.createElement("div");
-    rankBadge.textContent = podiumLabels[pi];
-    rankBadge.style.cssText = [
-      "position:absolute","top:-12px","left:50%","transform:translateX(-50%)",
-      "background:" + col, "color:#000",
-      "font-family:Orbitron,sans-serif","font-size:9px","font-weight:900",
-      "padding:2px 8px","border-radius:20px","letter-spacing:1px","white-space:nowrap"
-    ].join(";");
-
-    var avatarEl = document.createElement("div");
-    avatarEl.textContent = p.avatar || "😎";
-    avatarEl.style.cssText = [
-      "font-size:" + (realIdx === 0 ? "30px" : "24px"),
-      "margin-bottom:4px",
-      "filter:drop-shadow(0 0 8px " + glow + ")"
-    ].join(";");
-
-    var nameEl = document.createElement("div");
-    nameEl.textContent = _truncate(p.name || "Player", 8);
-    nameEl.style.cssText = [
-      "font-family:Orbitron,sans-serif","font-size:9px","font-weight:700",
-      "color:" + col, "letter-spacing:.5px","margin-bottom:2px","text-align:center"
-    ].join(";");
-
-    var xpEl = document.createElement("div");
-    xpEl.textContent = _formatNum(p.xp || 0) + " XP";
-    xpEl.style.cssText = "font-family:Orbitron,sans-serif;font-size:9px;color:#6a9080;letter-spacing:.5px;text-align:center;";
-
-    if (isMe) {
-      var youBadge = document.createElement("div");
-      youBadge.textContent = "YOU";
-      youBadge.style.cssText = "font-family:Orbitron,sans-serif;font-size:8px;font-weight:900;color:#00ff88;letter-spacing:1px;margin-top:3px;";
-      block.appendChild(youBadge);
+    /* crown above #1 */
+    var topSpace = document.createElement("div");
+    if (isFirst) {
+      topSpace.innerHTML = "&#9819;";
+      topSpace.style.cssText =
+        "font-size:30px;color:#c8f135;line-height:1;margin-bottom:5px;" +
+        "filter:drop-shadow(0 0 10px rgba(200,241,53,.55));text-align:center;";
+    } else {
+      topSpace.style.height = "40px";
     }
+    col.appendChild(topSpace);
 
-    block.appendChild(rankBadge);
-    block.appendChild(avatarEl);
-    block.appendChild(nameEl);
-    block.appendChild(xpEl);
-    podiumEl.appendChild(block);
+    /* avatar circle */
+    var ring = document.createElement("div");
+    ring.style.cssText = [
+      "position:relative",
+      "width:"  + circleSize[pi],
+      "height:" + circleSize[pi],
+      "border-radius:50%",
+      "background:rgba(255,255,255,.15)",
+      "border:2.5px solid " + borderColor[pi],
+      "display:flex",
+      "align-items:center",
+      "justify-content:center",
+      isFirst ? "box-shadow:0 0 22px rgba(200,241,53,.28);" : ""
+    ].join(";");
+
+    var em = document.createElement("div");
+    em.textContent = (p && p.avatar) ? p.avatar : "😎";
+    em.style.cssText = "font-size:" + emojiFSize[pi] + ";line-height:1;";
+    ring.appendChild(em);
+
+    /* rank badge */
+    var badge = document.createElement("div");
+    badge.textContent = idx + 1;
+    badge.style.cssText = [
+      "position:absolute",
+      "bottom:-11px",
+      "left:50%",
+      "transform:translateX(-50%)",
+      "width:24px",
+      "height:24px",
+      "border-radius:50%",
+      "background:" + (isFirst ? "#243a10" : "#1a2a20"),
+      "border:2px solid " + borderColor[pi],
+      "color:" + borderColor[pi],
+      "font-size:11px",
+      "font-weight:900",
+      "display:flex",
+      "align-items:center",
+      "justify-content:center",
+      "font-family:Orbitron,sans-serif"
+    ].join(";");
+    ring.appendChild(badge);
+    col.appendChild(ring);
+
+    /* spacer after badge */
+    var sp = document.createElement("div");
+    sp.style.height = "16px";
+    col.appendChild(sp);
+
+    /* name */
+    var nameEl = document.createElement("div");
+    nameEl.textContent = isMe ? "You" : _truncate((p && p.name) || "Player", 10);
+    nameEl.style.cssText =
+      "font-family:Cairo,sans-serif;font-size:12px;font-weight:700;color:" +
+      (isMe ? "#c8f135" : "#ccd8cc") + ";text-align:center;white-space:nowrap;" +
+      "overflow:hidden;text-overflow:ellipsis;max-width:90px;";
+    col.appendChild(nameEl);
+
+    /* pts */
+    var ptsEl = document.createElement("div");
+    ptsEl.style.cssText =
+      "display:flex;align-items:center;gap:3px;margin-top:4px;justify-content:center;";
+    var starEl = document.createElement("span");
+    starEl.textContent = "⭐";
+    starEl.style.fontSize = "11px";
+    var valEl = document.createElement("span");
+    valEl.textContent = _formatNum((p && p.xp) || 0) + " XP";
+    valEl.style.cssText =
+      "font-family:Orbitron,sans-serif;font-size:10px;font-weight:700;color:#c8f135;";
+    ptsEl.appendChild(starEl);
+    ptsEl.appendChild(valEl);
+    col.appendChild(ptsEl);
+
+    podiumEl.appendChild(col);
   }
 
-  /* ── Rank list (4th onward, plus always show current player) ── */
-  var myRank = -1;
-  for (var ri = 0; ri < rows.length; ri++) {
-    if (rows[ri].uid === myUid) { myRank = ri + 1; break; }
-  }
-
+  /* ── Rank list (4th onward) ── */
   for (var i = 3; i < rows.length; i++) {
-    var row = rows[i];
-    var isMyRow = row.uid === myUid;
-    listEl.appendChild(_buildRowEl(i + 1, row, isMyRow));
+    listEl.appendChild(_buildRowEl(i + 1, rows[i], rows[i].uid === myUid));
   }
 
-  /* If current player is in top 3 or not in list yet, show a sticky "you" row */
+  var myRank = rows.findIndex(function(r) { return r.uid === myUid; });
   if (myRank === -1) {
-    var myRow = document.createElement("div");
-    myRow.style.cssText = "padding:8px 16px;text-align:center;font-family:Orbitron,sans-serif;font-size:10px;color:#2ecc71;letter-spacing:1px;border-top:1px solid #1a2d3a;";
-    myRow.textContent = "Win a level to enter the leaderboard";
-    listEl.appendChild(myRow);
-  } else if (myRank <= 3 && rows.length > 3) {
-    /* player is in podium — nothing extra needed */
+    var hint = document.createElement("div");
+    hint.style.cssText =
+      "padding:20px;text-align:center;font-family:Orbitron,sans-serif;" +
+      "font-size:10px;color:rgba(255,255,255,.40);letter-spacing:1px;";
+    hint.textContent = "WIN A LEVEL TO ENTER";
+    listEl.appendChild(hint);
   }
 }
 
 function _buildRowEl(rank, p, isMe) {
   var el = document.createElement("div");
   el.style.cssText = [
-    "display:flex","align-items:center","gap:10px",
-    "padding:10px 16px",
-    "border-bottom:1px solid #0d1e18",
+    "display:flex",
+    "align-items:center",
+    "gap:12px",
+    "padding:12px 16px",
+    "margin:0 14px 8px",
+    "border-radius:16px",
     isMe
-      ? "background:linear-gradient(90deg,rgba(0,255,136,.08),transparent);border-left:2px solid #00ff88;"
-      : "background:transparent;"
+      ? "background:rgba(255,255,255,.22);"
+      : "background:rgba(255,255,255,.10);"
   ].join(";");
 
+  /* rank number */
   var rankEl = document.createElement("div");
-  rankEl.textContent = "#" + rank;
-  rankEl.style.cssText = "font-family:Orbitron,sans-serif;font-size:11px;font-weight:700;color:" + (isMe ? "#00ff88" : "#2a4838") + ";width:30px;flex-shrink:0;";
+  rankEl.textContent = rank;
+  rankEl.style.cssText =
+    "font-family:Orbitron,sans-serif;font-size:14px;font-weight:700;width:26px;" +
+    "flex-shrink:0;text-align:center;color:" +
+    (isMe ? "#c8f135" : "#3a4e3a") + ";";
 
-  var avatarEl = document.createElement("div");
-  avatarEl.textContent = p.avatar || "😎";
-  avatarEl.style.cssText = "font-size:22px;flex-shrink:0;";
+  /* avatar circle */
+  var ring = document.createElement("div");
+  ring.style.cssText =
+    "width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);" +
+    "border:2px solid " + (isMe ? "#c8f135" : "#252e25") + ";" +
+    "display:flex;align-items:center;justify-content:center;flex-shrink:0;";
+  var em = document.createElement("div");
+  em.textContent = p.avatar || "😎";
+  em.style.cssText = "font-size:22px;line-height:1;";
+  ring.appendChild(em);
 
-  var infoEl = document.createElement("div");
-  infoEl.style.cssText = "flex:1;min-width:0;";
-
+  /* name */
   var nameEl = document.createElement("div");
-  nameEl.textContent = (p.name || "Player") + (isMe ? "  (You)" : "");
-  nameEl.style.cssText = "font-family:Orbitron,sans-serif;font-size:11px;font-weight:700;color:" + (isMe ? "#00ff88" : "#d8eee0") + ";white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
+  nameEl.textContent = isMe ? "You" : _truncate(p.name || "Player", 16);
+  nameEl.style.cssText =
+    "flex:1;font-family:Cairo,sans-serif;font-size:15px;font-weight:600;" +
+    "color:" + (isMe ? "#ffffff" : "#ccd8cc") + ";" +
+    "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
 
-  var lvlEl = document.createElement("div");
-  lvlEl.textContent = "Lv." + (p.playerLevel || 1) + "  ·  " + _formatNum(p.thndr || 0) + " 💰";
-  lvlEl.style.cssText = "font-size:10px;color:#2a5040;margin-top:1px;";
+  /* pts */
+  var ptsWrap = document.createElement("div");
+  ptsWrap.style.cssText =
+    "display:flex;align-items:center;gap:4px;flex-shrink:0;";
+  var star = document.createElement("span");
+  star.textContent = "⭐";
+  star.style.fontSize = "13px";
+  var val = document.createElement("span");
+  val.textContent = _formatNum(p.xp || 0) + " XP";
+  val.style.cssText =
+    "font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;" +
+    "color:" + (isMe ? "#c8f135" : "#5a8a5a") + ";";
+  ptsWrap.appendChild(star);
+  ptsWrap.appendChild(val);
 
-  var xpEl = document.createElement("div");
-  xpEl.textContent = _formatNum(p.xp || 0);
-  xpEl.style.cssText = "font-family:Orbitron,sans-serif;font-size:12px;font-weight:900;color:" + (isMe ? "#00ff88" : "#00aaff") + ";flex-shrink:0;";
-
-  var xpLblEl = document.createElement("div");
-  xpLblEl.style.cssText = "text-align:right;flex-shrink:0;";
-  xpLblEl.appendChild(xpEl);
-  var xpSubEl = document.createElement("div");
-  xpSubEl.textContent = "XP";
-  xpSubEl.style.cssText = "font-size:9px;color:#2a4838;text-align:right;letter-spacing:1px;";
-  xpLblEl.appendChild(xpSubEl);
-
-  infoEl.appendChild(nameEl);
-  infoEl.appendChild(lvlEl);
   el.appendChild(rankEl);
-  el.appendChild(avatarEl);
-  el.appendChild(infoEl);
-  el.appendChild(xpLblEl);
+  el.appendChild(ring);
+  el.appendChild(nameEl);
+  el.appendChild(ptsWrap);
   return el;
 }
 

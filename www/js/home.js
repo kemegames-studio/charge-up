@@ -24,15 +24,19 @@ function buildLevelMap(animateUnlock) {
     var isDone=completedLevels.has(i), isCurrent=(i===selectedLevel), isLocked=(i>selectedLevel&&!isDone);
     var cls=isLocked?"locked":isDone?"done":isCurrent?"current":"open";
     if (i===selectedLevel) cls+=" selected";
+    var wrap=document.createElement("div"); wrap.className="lnode-wrap";
     var node=document.createElement("div"); node.className="lnode "+cls; node.id="lnode-"+i;
-    var lockOrNum=isLocked?"\uD83D\uDD12":String(i+1);
+    var lockOrNum=isLocked?'<img src="img/figma/lock.png" style="width:26px;height:26px;object-fit:contain;opacity:.75;">':String(i+1);
     var diff=isLocked?L.locked:L.difficulty[i];
     var stars="";
-    if (isDone) stars='<div class="lnode-stars"><span style="color:#f39c12">\u2605</span><span style="color:#f39c12">\u2605</span><span style="color:#f39c12">\u2605</span></div>';
-    else if (isCurrent) stars='<div class="lnode-stars"><span style="color:#333">\u2606</span><span style="color:#333">\u2606</span><span style="color:#333">\u2606</span></div>';
-    node.innerHTML='<div class="lnode-num">'+lockOrNum+'</div><div class="lnode-label">'+diff+'</div>'+stars;
+    if (isDone) stars='<div class="lnode-stars"><img src="img/figma/star.png" class="lnode-star"><img src="img/figma/star.png" class="lnode-star"><img src="img/figma/star.png" class="lnode-star"></div>';
+    else if (isCurrent) stars='<div class="lnode-stars"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"></div>';
+    node.innerHTML='<div class="lnode-num">'+lockOrNum+'</div>'+stars;
     if (!isLocked) { (function(idx){ node.onclick=function(){ selectedLevel=idx; buildLevelMap(false); }; })(i); }
-    map.appendChild(node);
+    wrap.appendChild(node);
+    var badge=document.createElement("div"); badge.className="lnode-diff-badge"; badge.textContent=diff;
+    wrap.appendChild(badge);
+    map.appendChild(wrap);
     if (i>0) {
       var conn=document.createElement("div");
       var connClass;
@@ -113,12 +117,12 @@ function animateUnlockNode(newIdx) {
       // Light up 3 stars one by one
       var starsWrap = completedNode.querySelector(".lnode-stars");
       if (starsWrap) {
-        var spans = starsWrap.querySelectorAll("span");
+        var spans = starsWrap.querySelectorAll(".lnode-star");
         for (var si=0; si<spans.length; si++) {
           (function(s, delay){
             setTimeout(function(){
               s.className = "node-star-pop";
-              s.style.color = "#f39c12";
+              s.style.filter = "drop-shadow(0 0 6px #f39c12) brightness(1.1)"; s.style.opacity = "1";
             }, delay);
           })(spans[si], si * 180);
         }
@@ -154,12 +158,13 @@ function animateUnlockNode(newIdx) {
       newNode.innerHTML =
         '<div class="lnode-num" style="animation:numReveal 0.4s cubic-bezier(.36,1.56,.64,1) forwards;opacity:0;">'
         + (newIdx + 1) + '</div>'
-        + '<div class="lnode-label">' + L.difficulty[newIdx] + '</div>'
         + '<div class="lnode-stars">'
-        + '<span style="color:#444">☆</span>'
-        + '<span style="color:#444">☆</span>'
-        + '<span style="color:#444">☆</span>'
+        + '<img src="img/figma/star.png" class="lnode-star lnode-star-empty">'
+        + '<img src="img/figma/star.png" class="lnode-star lnode-star-empty">'
+        + '<img src="img/figma/star.png" class="lnode-star lnode-star-empty">'
         + '</div>';
+      var wrap = newNode.parentNode;
+      if (wrap) { var b = wrap.querySelector(".lnode-diff-badge"); if (b) b.textContent = L.difficulty[newIdx]; }
       newNode.onclick = function(){ selectedLevel = newIdx; buildLevelMap(false); };
 
       // Phase 5: Ring ripple + glow
@@ -239,12 +244,41 @@ function saveProfile() {
   if (nameVal) profile.name = nameVal;
   document.getElementById("avatarDisplay").textContent = profile.avatar;
   document.getElementById("avatarName").textContent    = profile.name;
+  var mr = document.getElementById("menuAvatarRing");
+  var mn = document.getElementById("menuPlayerName");
+  if (mr) mr.textContent = profile.avatar;
+  if (mn) mn.textContent = profile.name;
   closeAvatarModal();
   if (typeof saveProgress === "function") saveProgress();
 }
 
 function navHome()  { /* already on home */ }
 function navStore() { /* store coming soon */ }
+
+/* ════════ HAMBURGER MENU ════════ */
+function openMenu() {
+  var drawer = document.getElementById("menuDrawer");
+  var btn    = document.getElementById("hamburgerBtn");
+  // sync stats
+  var mr = document.getElementById("menuAvatarRing");
+  var mn = document.getElementById("menuPlayerName");
+  var ml = document.getElementById("menuLivesVal");
+  var mc = document.getElementById("menuCoinsVal");
+  var mx = document.getElementById("menuXpVal");
+  if (mr) mr.textContent = profile.avatar;
+  if (mn) mn.textContent = profile.name;
+  if (ml) ml.textContent = lives;
+  if (mc) mc.textContent = document.getElementById("coinCount") ? document.getElementById("coinCount").textContent : "0";
+  if (mx) mx.textContent = document.getElementById("xpCount") ? document.getElementById("xpCount").textContent : "0";
+  if (drawer) drawer.classList.add("open");
+  if (btn) btn.classList.add("open");
+}
+function closeMenu() {
+  var drawer = document.getElementById("menuDrawer");
+  var btn    = document.getElementById("hamburgerBtn");
+  if (drawer) drawer.classList.remove("open");
+  if (btn) btn.classList.remove("open");
+}
 
 window.addEventListener("load", function() {
   document.getElementById("avatarDisplay").textContent = profile.avatar;

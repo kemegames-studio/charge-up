@@ -85,7 +85,7 @@ function showWinOverlay(battPct, reward) {
   document.querySelector(".win-subtitle").textContent=L.winSub;
   document.querySelector(".win-bat-label").textContent=L.batteryLeft;
   var cb2=document.querySelector(".win-continue-btn"); if(cb2) cb2.textContent=L.continueBtn||"CONTINUE";
-  var stars=document.querySelectorAll("#winStars span");
+  var stars=document.querySelectorAll("#winStars .win-star");
   for (var i=0;i<stars.length;i++) { stars[i].classList.remove("lit"); stars[i].style.opacity="0"; }
   document.getElementById("winOverlay").classList.add("show");
   setTimeout(function(){ stars[0].classList.add("lit"); },400);
