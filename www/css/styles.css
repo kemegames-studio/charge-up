@@ -377,10 +377,14 @@ body {
   position: relative; flex-shrink: 0;
 }
 
-/* ── LEVEL NODES — hexagonal gems ── */
+/* ── LEVEL NODES — filleted hexagonal gems ── */
+/*
+   Filleted hex path for 92×106 with corner radius 10px
+   Computed from pointy-top hex vertices with quadratic bezier fillets
+*/
 .lnode {
   width: 92px; height: 106px;
-  clip-path: polygon(50% 0%, 96% 24%, 96% 76%, 50% 100%, 4% 76%, 4% 24%);
+  clip-path: path("M37.4,5.2 Q46.0,0.0 54.6,5.2 L79.7,20.3 Q88.3,25.4 88.3,35.4 L88.3,70.6 Q88.3,80.6 79.7,85.7 L54.6,100.8 Q46.0,106.0 37.4,100.8 L12.3,85.7 Q3.7,80.6 3.7,70.6 L3.7,35.4 Q3.7,25.4 12.3,20.3 Z");
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   position: relative; flex-shrink: 0;
@@ -390,41 +394,63 @@ body {
 }
 .lnode:active { transform: scale(0.9); }
 
+/* Each state uses: bg-color = dark outer rim, bg-image = gem gradient inset */
 .lnode.done {
-  background: linear-gradient(155deg, #FFE060 0%, #FF9900 45%, #CC5500 100%);
-  filter: drop-shadow(0 4px 10px rgba(255,153,0,.55));
+  background-color: #663300;
+  background-image: radial-gradient(ellipse 70% 62% at 46% 36%, #FFF4AA 0%, #FFCC22 28%, #FF8800 58%, #AA4400 100%);
+  background-repeat: no-repeat; background-position: 50% 52%; background-size: 82% 86%;
+  filter: drop-shadow(0 5px 12px rgba(255,130,0,.6)) drop-shadow(0 2px 0 rgba(0,0,0,.4));
 }
 .lnode.current {
-  background: linear-gradient(155deg, #88DDFF 0%, #1188EE 45%, #003399 100%);
-  filter: drop-shadow(0 4px 18px rgba(17,136,238,.85));
+  background-color: #001244;
+  background-image: radial-gradient(ellipse 70% 62% at 46% 36%, #CCEFFF 0%, #44AAFF 28%, #0066EE 58%, #002288 100%);
+  background-repeat: no-repeat; background-position: 50% 52%; background-size: 82% 86%;
+  filter: drop-shadow(0 5px 16px rgba(30,120,255,.8)) drop-shadow(0 2px 0 rgba(0,0,0,.4));
   animation: nodePulse 2.2s ease-in-out infinite;
 }
 .lnode.open {
-  background: linear-gradient(155deg, #66CCFF 0%, #0066DD 45%, #003399 100%);
-  filter: drop-shadow(0 4px 8px rgba(0,102,221,.5));
+  background-color: #002266;
+  background-image: radial-gradient(ellipse 70% 62% at 46% 36%, #88DDFF 0%, #1199FF 28%, #0055CC 58%, #001A88 100%);
+  background-repeat: no-repeat; background-position: 50% 52%; background-size: 82% 86%;
+  filter: drop-shadow(0 4px 10px rgba(0,100,220,.5)) drop-shadow(0 2px 0 rgba(0,0,0,.35));
 }
 .lnode.locked {
-  background: linear-gradient(155deg, #3355AA 0%, #1A3377 45%, #0A1A44 100%);
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.4));
-  cursor: default; opacity: 0.55;
+  background-color: #050A1A;
+  background-image: radial-gradient(ellipse 70% 62% at 46% 36%, #4466AA 0%, #223377 28%, #111A44 58%, #060C22 100%);
+  background-repeat: no-repeat; background-position: 50% 52%; background-size: 82% 86%;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+  cursor: default; opacity: 0.60;
 }
 .lnode.selected::after {
   content: '';
-  position: absolute; inset: -6px;
-  clip-path: polygon(50% 0%, 96% 24%, 96% 76%, 50% 100%, 4% 76%, 4% 24%);
-  border: 3px solid rgba(255,232,74,.8);
-  animation: selectedPulse 1.5s ease-in-out infinite;
+  position: absolute; inset: -7px;
+  clip-path: path("M42.0,5.8 Q52.0,0.0 62.0,5.8 L89.8,21.6 Q99.8,27.5 99.8,39.5 L99.8,80.5 Q99.8,92.5 89.8,98.4 L62.0,114.2 Q52.0,120.0 42.0,114.2 L14.2,98.4 Q4.2,92.5 4.2,80.5 L4.2,39.5 Q4.2,27.5 14.2,21.6 Z");
+  background: transparent;
+  border: 3.5px solid rgba(255,224,60,.9);
+  animation: selectedPulse 1.4s ease-in-out infinite;
   pointer-events: none;
 }
 .lnode.unlocking { animation: unlockPop .7s cubic-bezier(.36,1.56,.64,1) forwards; }
 
-/* Gem highlight sheen */
+/* Gem highlight — top lens flare */
 .lnode::before {
   content: '';
   position: absolute;
-  top: 8%; left: 20%; width: 60%; height: 30%;
-  background: linear-gradient(180deg, rgba(255,255,255,.40) 0%, transparent 100%);
-  border-radius: 50%; pointer-events: none;
+  top: 10%; left: 22%; width: 56%; height: 28%;
+  background: linear-gradient(175deg, rgba(255,255,255,.60) 0%, rgba(255,255,255,.15) 60%, transparent 100%);
+  border-radius: 50% 50% 60% 60%;
+  pointer-events: none;
+  z-index: 2;
+}
+/* Bottom inner shadow for depth */
+.lnode::after {
+  content: '';
+  position: absolute;
+  bottom: 8%; left: 15%; width: 70%; height: 22%;
+  background: linear-gradient(0deg, rgba(0,0,0,.28) 0%, transparent 100%);
+  border-radius: 40%;
+  pointer-events: none;
+  z-index: 1;
 }
 
 @keyframes nodePulse {
