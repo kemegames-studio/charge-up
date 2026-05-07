@@ -40,7 +40,7 @@ function renderLeaderboard(rows, myUid) {
   var order       = [1, 0, 2];
   var circleSize  = ["76px", "92px", "76px"];
   var emojiFSize  = ["30px", "38px", "30px"];
-  var borderColor = ["#a8b8b0", "#c8f135", "#c88832"];
+  var borderColor = ["#88BBFF", "#FFCC44", "#FF7744"];
 
   podiumEl.style.cssText =
     "display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:16px 16px 28px;";
@@ -59,7 +59,7 @@ function renderLeaderboard(rows, myUid) {
     if (isFirst) {
       topSpace.innerHTML = "&#9819;";
       topSpace.style.cssText =
-        "font-size:30px;color:#c8f135;line-height:1;margin-bottom:5px;" +
+        "font-size:30px;color:#FFCC44;line-height:1;margin-bottom:5px;" +
         "filter:drop-shadow(0 0 10px rgba(200,241,53,.55));text-align:center;";
     } else {
       topSpace.style.height = "40px";
@@ -78,7 +78,7 @@ function renderLeaderboard(rows, myUid) {
       "display:flex",
       "align-items:center",
       "justify-content:center",
-      isFirst ? "box-shadow:0 0 22px rgba(200,241,53,.28);" : ""
+      isFirst ? "box-shadow:0 0 22px rgba(255,204,68,.35);" : ""
     ].join(";");
 
     var em = document.createElement("div");
@@ -97,7 +97,7 @@ function renderLeaderboard(rows, myUid) {
       "width:24px",
       "height:24px",
       "border-radius:50%",
-      "background:" + (isFirst ? "#243a10" : "#1a2a20"),
+      "background:" + (isFirst ? "#0A2A55" : "#0D1F44"),
       "border:2px solid " + borderColor[pi],
       "color:" + borderColor[pi],
       "font-size:11px",
@@ -120,7 +120,7 @@ function renderLeaderboard(rows, myUid) {
     nameEl.textContent = isMe ? "You" : _truncate((p && p.name) || "Player", 10);
     nameEl.style.cssText =
       "font-family:Cairo,sans-serif;font-size:12px;font-weight:700;color:" +
-      (isMe ? "#c8f135" : "#ccd8cc") + ";text-align:center;white-space:nowrap;" +
+      (isMe ? "#44BBFF" : "#C0D4FF") + ";text-align:center;white-space:nowrap;" +
       "overflow:hidden;text-overflow:ellipsis;max-width:90px;";
     col.appendChild(nameEl);
 
@@ -134,7 +134,7 @@ function renderLeaderboard(rows, myUid) {
     var valEl = document.createElement("span");
     valEl.textContent = _formatNum((p && p.xp) || 0) + " XP";
     valEl.style.cssText =
-      "font-family:Orbitron,sans-serif;font-size:10px;font-weight:700;color:#c8f135;";
+      "font-family:Orbitron,sans-serif;font-size:10px;font-weight:700;color:#FFCC44;";
     ptsEl.appendChild(starEl);
     ptsEl.appendChild(valEl);
     col.appendChild(ptsEl);
@@ -152,7 +152,7 @@ function renderLeaderboard(rows, myUid) {
     var hint = document.createElement("div");
     hint.style.cssText =
       "padding:20px;text-align:center;font-family:Orbitron,sans-serif;" +
-      "font-size:10px;color:rgba(255,255,255,.40);letter-spacing:1px;";
+      "font-size:10px;color:rgba(200,220,255,.50);letter-spacing:1px;";
     hint.textContent = "WIN A LEVEL TO ENTER";
     listEl.appendChild(hint);
   }
@@ -178,13 +178,13 @@ function _buildRowEl(rank, p, isMe) {
   rankEl.style.cssText =
     "font-family:Orbitron,sans-serif;font-size:14px;font-weight:700;width:26px;" +
     "flex-shrink:0;text-align:center;color:" +
-    (isMe ? "#c8f135" : "#3a4e3a") + ";";
+    (isMe ? "#44BBFF" : "#2A4088") + ";";
 
   /* avatar circle */
   var ring = document.createElement("div");
   ring.style.cssText =
     "width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.15);" +
-    "border:2px solid " + (isMe ? "#c8f135" : "#252e25") + ";" +
+    "border:2px solid " + (isMe ? "#44BBFF" : "#1A2A4A") + ";" +
     "display:flex;align-items:center;justify-content:center;flex-shrink:0;";
   var em = document.createElement("div");
   em.textContent = p.avatar || "😎";
@@ -196,7 +196,7 @@ function _buildRowEl(rank, p, isMe) {
   nameEl.textContent = isMe ? "You" : _truncate(p.name || "Player", 16);
   nameEl.style.cssText =
     "flex:1;font-family:Cairo,sans-serif;font-size:15px;font-weight:600;" +
-    "color:" + (isMe ? "#ffffff" : "#ccd8cc") + ";" +
+    "color:" + (isMe ? "#ffffff" : "#C0D4FF") + ";" +
     "white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
 
   /* pts */
@@ -210,7 +210,7 @@ function _buildRowEl(rank, p, isMe) {
   val.textContent = _formatNum(p.xp || 0) + " XP";
   val.style.cssText =
     "font-family:Orbitron,sans-serif;font-size:12px;font-weight:700;" +
-    "color:" + (isMe ? "#c8f135" : "#5a8a5a") + ";";
+    "color:" + (isMe ? "#44BBFF" : "#4488CC") + ";";
   ptsWrap.appendChild(star);
   ptsWrap.appendChild(val);
 

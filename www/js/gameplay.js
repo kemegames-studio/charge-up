@@ -111,13 +111,13 @@ function onMove(e) {
 function onEnd(e) { e.preventDefault(); drawing=null; draw(); }
 function draw() {
   if (!CELL) return;
-  ctx2.clearRect(0,0,SIZE,SIZE); ctx2.fillStyle="#1A1040"; ctx2.fillRect(0,0,SIZE,SIZE);
-  ctx2.strokeStyle="rgba(255,255,255,.07)"; ctx2.lineWidth=0.5;
+  ctx2.clearRect(0,0,SIZE,SIZE); ctx2.fillStyle="#1A2F5A"; ctx2.fillRect(0,0,SIZE,SIZE);
+  ctx2.strokeStyle="rgba(255,255,255,.09)"; ctx2.lineWidth=0.5;
   for (var i=0;i<=GRID;i++){ctx2.beginPath();ctx2.moveTo(i*CELL,0);ctx2.lineTo(i*CELL,SIZE);ctx2.stroke();ctx2.beginPath();ctx2.moveTo(0,i*CELL);ctx2.lineTo(SIZE,i*CELL);ctx2.stroke();}
-  for (var r=0;r<GRID;r++) for (var c=0;c<GRID;c++){ctx2.fillStyle="rgba(255,255,255,.10)";ctx2.beginPath();ctx2.arc(c*CELL+CELL/2,r*CELL+CELL/2,2,0,Math.PI*2);ctx2.fill();}
+  for (var r=0;r<GRID;r++) for (var c=0;c<GRID;c++){ctx2.fillStyle="rgba(100,180,255,.18)";ctx2.beginPath();ctx2.arc(c*CELL+CELL/2,r*CELL+CELL/2,2,0,Math.PI*2);ctx2.fill();}
   level.walls.forEach(function(w){
-    ctx2.fillStyle=bombModeActive?"#3a0020":"#2A1A55";
-    ctx2.strokeStyle=bombModeActive?"#e74c3c":"rgba(255,255,255,.25)";
+    ctx2.fillStyle=bombModeActive?"#3a0020":"#1A3060";
+    ctx2.strokeStyle=bombModeActive?"#e74c3c":"rgba(100,180,255,.30)";
     ctx2.lineWidth=bombModeActive?2:1;
     ctx2.beginPath();ctx2.roundRect(w.x*CELL+4,w.y*CELL+4,CELL-8,CELL-8,6);ctx2.fill();ctx2.stroke();
     ctx2.font=(CELL*0.35)+"px sans-serif";ctx2.textAlign="center";ctx2.textBaseline="middle";
