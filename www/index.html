@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Charge Up - Keme Games</title>
+<title>Cat Spellbound - Keme Games</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
@@ -21,7 +21,7 @@
 
 <!-- SPLASH: GAME -->
 <div class="splash gone" id="splashGame">
-  <img class="splash-bg-img" src="img/game-splash.png">
+  <img class="splash-bg-img" src="img/magical_cat_splash.png">
 </div>
 
 
@@ -133,7 +133,7 @@
     </div>
     <!-- Current avatar big -->
     <div style="text-align:center;margin-bottom:16px;">
-      <div id="avatarBig" style="font-size:64px;line-height:1;">😎</div>
+      <div id="avatarBig" style="font-size:64px;line-height:1;"><img src="img/figma/wizard_cat_avatar.png" style="width:128px;height:128px;object-fit:contain;"></div>
     </div>
     <!-- Name input -->
     <div style="margin-bottom:16px;">
@@ -168,7 +168,7 @@
     </div>
     <div class="h-avatar-wrap" onclick="openAvatarModal()" style="cursor:pointer;">
       <div class="h-avatar-name" id="avatarNameGame">Player</div>
-      <div class="h-avatar" id="avatarDisplayGame">😎</div>
+      <div class="h-avatar" id="avatarDisplayGame"><img src="img/figma/wizard_cat_avatar.png" style="width:40px;height:40px;object-fit:contain;"></div>
     </div>
     
   </div>
@@ -198,13 +198,13 @@
 
   <div class="powerup-bar">
     <div class="powerup-btn disabled" onclick="usePowerup('hint')" id="pu-hint">
-      <img src="img/figma/light_bulb.png" class="powerup-icon" style="width:32px;height:32px;object-fit:contain;">
-      <span class="powerup-label">Hint</span>
+      <img src="img/figma/magical_star_wand.png" class="powerup-icon" style="width:32px;height:32px;object-fit:contain;">
+      <span class="powerup-label">Magic Wand</span>
       <span class="powerup-count" id="pu-hint-count">🔒</span>
     </div>
     <div class="powerup-btn disabled" onclick="usePowerup('reset')" id="pu-reset">
-      <img src="img/figma/hammer.png" class="powerup-icon" style="width:32px;height:32px;object-fit:contain;">
-      <span class="powerup-label">Reset</span>
+      <img src="img/figma/magic_book.png" class="powerup-icon" style="width:32px;height:32px;object-fit:contain;">
+      <span class="powerup-label">Spell Book</span>
       <span class="powerup-count" id="pu-reset-count">🔒</span>
     </div>
     <div class="powerup-btn disabled" onclick="usePowerup('time')" id="pu-time">

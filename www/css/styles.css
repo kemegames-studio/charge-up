@@ -7,49 +7,49 @@
 
 /* ── TOKENS ── */
 :root {
-  --bg:           #1A7FFF;
-  --bg-dark:      #0055CC;
-  --bg-light:     #55AAFF;
+  --bg:           #4B0082; /* Indigo/Purple */
+  --bg-dark:      #2E0854;
+  --bg-light:     #6A0DAD;
   --surface:      #FFFFFF;
-  --surface-2:    #F0F6FF;
-  --surface-3:    #D8EAFF;
+  --surface-2:    #F5F0FF;
+  --surface-3:    #E6E6FA;
 
   --border:       rgba(255,255,255,.15);
   --border-mid:   rgba(255,255,255,.25);
   --border-bright:rgba(255,255,255,.60);
 
   /* Gold — coins, stars, rewards */
-  --neon:         #F5C518;
-  --neon-mid:     #E0AE00;
-  --neon-dark:    #B88800;
-  --neon-glow:    rgba(245,197,24,.30);
-  --neon-glow-lg: rgba(245,197,24,.50);
+  --neon:         #FFD700;
+  --neon-mid:     #DAA520;
+  --neon-dark:    #B8860B;
+  --neon-glow:    rgba(255,215,0,.30);
+  --neon-glow-lg: rgba(255,215,0,.50);
 
   /* Green — CTA buttons */
-  --olive:        #55CC33;
-  --olive-bright: #77EE55;
+  --olive:        #32CD32;
+  --olive-bright: #7CFC00;
 
   /* Gold */
-  --gold:         #F5C518;
-  --gold-dark:    #CC9900;
-  --gold-shadow:  #997700;
+  --gold:         #FFD700;
+  --gold-dark:    #DAA520;
+  --gold-shadow:  #B8860B;
 
   /* Red — lives, danger, lose */
-  --red:          #FF4466;
-  --red-dark:     #CC1133;
-  --red-glow:     rgba(255,68,102,.30);
+  --red:          #FF4500;
+  --red-dark:     #8B0000;
+  --red-glow:     rgba(255,69,0,.30);
 
   /* Pink — banners, accents */
-  --pink:         #FF6EB4;
-  --pink-dark:    #CC3380;
+  --pink:         #FF69B4;
+  --pink-dark:    #C71585;
 
   /* Blue */
-  --blue:         #44BBFF;
-  --blue-glow:    rgba(68,187,255,.25);
+  --blue:         #00BFFF;
+  --blue-glow:    rgba(0,191,255,.25);
 
   /* Purple */
-  --purple:       #9944EE;
-  --purple-glow:  rgba(153,68,238,.30);
+  --purple:       #8A2BE2;
+  --purple-glow:  rgba(138,43,226,.30);
 
   /* Text */
   --text:         #FFFFFF;
@@ -67,7 +67,7 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background: linear-gradient(160deg, #55AAFF 0%, #1A7FFF 50%, #0044CC 100%);
+  background: linear-gradient(160deg, #6A0DAD 0%, #4B0082 50%, #2E0854 100%);
   font-family: 'Cairo', sans-serif;
   height: 100vh; overflow: hidden;
   color: var(--text);
@@ -86,7 +86,7 @@ body {
    HOME VIEW
 ═══════════════════════════════════════ */
 #homeView {
-  background: linear-gradient(160deg, #55AAFF 0%, #1A7FFF 50%, #0044CC 100%);
+  background: linear-gradient(160deg, #6A0DAD 0%, #4B0082 50%, #2E0854 100%);
   justify-content: flex-start;
   overflow: hidden;
 }
