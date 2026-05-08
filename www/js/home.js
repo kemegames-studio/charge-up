@@ -29,37 +29,15 @@ function buildLevelMap(animateUnlock) {
     var lockOrNum=isLocked?'<img src="img/figma/lock.png" style="width:26px;height:26px;object-fit:contain;opacity:.75;">':String(i+1);
     var diff=isLocked?L.locked:L.difficulty[i];
     var stars="";
-    if (isDone) stars='<div class="lnode-stars"><img src="img/figma/star.png" class="lnode-star"><img src="img/figma/star.png" class="lnode-star"><img src="img/figma/star.png" class="lnode-star"></div>';
-    else if (isCurrent) stars='<div class="lnode-stars"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"></div>';
-    node.innerHTML='<div class="lnode-num">'+lockOrNum+'</div>'+stars;
+    if (isDone) stars='<div class="lnode-stars" style="z-index:2;"><img src="img/figma/star.png" class="lnode-star"><img src="img/figma/star.png" class="lnode-star"><img src="img/figma/star.png" class="lnode-star"></div>';
+    else if (isCurrent) stars='<div class="lnode-stars" style="z-index:2;"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"><img src="img/figma/star.png" class="lnode-star lnode-star-empty"></div>';
+    node.innerHTML='<div class="lnode-hex"></div><div class="lnode-num" style="z-index:2; font-weight:900; font-size:24px; color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">'+lockOrNum+'</div>'+stars;
     if (!isLocked) { (function(idx){ node.onclick=function(){ selectedLevel=idx; buildLevelMap(false); }; })(i); }
     wrap.appendChild(node);
     var badge=document.createElement("div"); badge.className="lnode-diff-badge"; badge.textContent=diff;
     wrap.appendChild(badge);
     map.appendChild(wrap);
-    if (i>0) {
-      var conn=document.createElement("div");
-      var connClass;
-      // conn-i sits BELOW node-i, ABOVE node-(i-1)
-      // Green only if node-(i-1) is completed (player passed through it)
-      // The connector ABOVE selectedLevel must stay dark
-      if (animateUnlock && i === pendingUnlockIdx) {
-        // This connector will be animated from dark to green
-        connClass = "locked";
-      } else if (completedLevels.has(i-1) && i-1 < selectedLevel) {
-        // Both sides below current — fully completed path
-        connClass = "done";
-      } else if (i-1 === selectedLevel - 1 && completedLevels.has(i-1)) {
-        // Connector just below current level (between completed and current)
-        connClass = "open";
-      } else if (i <= selectedLevel && completedLevels.has(i-1)) {
-        connClass = "done";
-      } else {
-        connClass = "locked";
-      }
-      conn.className="connector "+connClass;
-      conn.id="conn-"+i; map.appendChild(conn);
-    }
+    // Grid layout handles connections visually now
   }
   setTimeout(function(){
     var ns=map.querySelectorAll(".lnode"), idx=LEVELS.length-1-selectedLevel;
